@@ -1,12 +1,6 @@
-packages:
-  - 'apps/*'
-  - 'packages/*'
-
 allowBuilds:
-  '@parcel/watcher': true
-  '@swc/core': true
-  sharp: true
-  unrs-resolver: true
-  esbuild: true
-  core-js: true
-  workerd: true
+  '@parcel/watcher': set this to true or false
+  '@swc/core': set this to true or false
+  core-js: set this to true or false
+  sharp: set this to true or false
+  unrs-resolver: set this to true or false
