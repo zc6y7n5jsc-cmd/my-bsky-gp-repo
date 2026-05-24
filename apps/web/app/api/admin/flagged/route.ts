@@ -1,0 +1,32 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { desc } from 'drizzle-orm';
+import { entries } from '@bsky-gp/db/schema';
+import { db } from '@/src/lib/db';
+import { eq } from 'drizzle-orm';
+
+export const runtime = 'nodejs';
+
+function verifyAdminAuth(req: NextRequest): boolean {
+  const secret = process.env.ADMIN_SECRET;
+  if (!secret) return false;
+  return req.headers.get('Authorization') === `Bearer ${secret}`;
+}
+
+export async function GET(req: NextRequest) {
+  if (!verifyAdminAuth(req)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const flagged = await db
+      .select()
+      .from(entries)
+      .where(eq(entries.isFlagged, true))
+      .orderBy(desc(entries.lastSnapshotAt));
+
+    return NextResponse.json({ entries: flagged, total: flagged.length });
+  } catch (err) {
+    console.error('[admin/flagged] DB error:', err);
+    return NextResponse.json({ error: 'Database error' }, { status: 500 });
+  }
+}

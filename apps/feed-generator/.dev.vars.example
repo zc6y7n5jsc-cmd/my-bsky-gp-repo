@@ -1,0 +1,5 @@
+# ローカル開発用の環境変数 (wrangler dev で読み込まれる)
+# このファイルをコピーして .dev.vars を作成し、実際の値を入力すること
+# .dev.vars は .gitignore に含めること
+
+DATABASE_URL=postgresql://user:password@ep-xxx.us-east-2.aws.neon.tech/bskygp?sslmode=require

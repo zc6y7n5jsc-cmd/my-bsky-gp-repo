@@ -1,0 +1,16 @@
+name = "bsky-gp-feed"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# Feed Generator の DID（did:web 形式）
+FEED_DID = "did:web:feed.bsky-gp.vercel.app"
+# Feed Generator のホスト名（カスタムドメイン設定後に変更）
+FEED_HOSTNAME = "feed.bsky-gp.vercel.app"
+# DATABASE_URL はシークレット。以下のコマンドで登録する:
+#   wrangler secret put DATABASE_URL
+
+[[routes]]
+pattern = "feed.bsky-gp.vercel.app/*"
+custom_domain = true
