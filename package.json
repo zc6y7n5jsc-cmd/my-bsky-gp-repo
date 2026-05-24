@@ -9,7 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@bsky-gp/db": "workspace:*",
     "@atproto/api": "^0.20.5",
     "@atproto/oauth-client-node": "^0.4.0",
     "@neondatabase/serverless": "^0.10.4",
