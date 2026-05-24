@@ -18,6 +18,7 @@ export async function GET() {
     response_types: ['code'],
     token_endpoint_auth_method: 'none',
     application_type: 'web',
+    dpop_bound_access_tokens: true,
   };
 
   return NextResponse.json(metadata, {
