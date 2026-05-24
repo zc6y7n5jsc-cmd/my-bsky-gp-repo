@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { desc } from 'drizzle-orm';
-import { entries } from '@bsky-gp/db/schema';
-import { db } from '@/src/lib/db';
+import { entries, db } from '@/src/lib/db-schema';
 import { eq } from 'drizzle-orm';
 
 export const runtime = 'nodejs';

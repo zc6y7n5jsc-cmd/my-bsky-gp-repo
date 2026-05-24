@@ -1,6 +1,6 @@
 import { eq, and, desc, asc } from 'drizzle-orm';
-import { entries, champions } from '@bsky-gp/db/schema';
-import { db } from './db';
+import { entries, champions } from './db-schema';
+import { db } from './db-schema';
 import type { EntryClass } from './constants';
 
 export const CLASS_DISPLAY_ORDER: EntryClass[] = [

@@ -16,8 +16,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // @bsky-gp/db はローカルワークスペースパッケージのため transpile が必要
-  transpilePackages: ['@bsky-gp/db'],
 };
 
 export default withNextIntl(nextConfig);

@@ -1,6 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { db } from '@/src/lib/db';
-import { entries } from '@bsky-gp/db/schema';
+import { db, entries } from '@/src/lib/db-schema';
 import { eq, and } from 'drizzle-orm';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bsky-gp.vercel.app';

@@ -1,6 +1,6 @@
 import { eq, and, gte } from 'drizzle-orm';
-import { entries, snapshots } from '@bsky-gp/db/schema';
-import { db } from './db';
+import { entries, snapshots } from './db-schema';
+import { db } from './db-schema';
 
 const Z_SCORE_THRESHOLD = 3;
 // Need at least this many diffs to compute a reliable baseline.

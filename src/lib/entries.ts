@@ -1,7 +1,7 @@
 import { eq, and } from 'drizzle-orm';
-import { entries, snapshots } from '@bsky-gp/db/schema';
-import type { Entry } from '@bsky-gp/db/schema';
-import { db } from './db';
+import { entries, snapshots } from './db-schema';
+import type { Entry } from './db-schema';
+import { db } from './db-schema';
 import { determineClass, RACE_DURATION_DAYS } from './constants';
 import { getCurrentSeason } from './season';
 import type { BlueskyProfile } from './bluesky';

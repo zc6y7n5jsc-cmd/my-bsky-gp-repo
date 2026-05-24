@@ -1,7 +1,7 @@
 import { eq, and, or, gt, lt, desc, asc, sql, inArray, gte } from 'drizzle-orm';
-import { entries, snapshots } from '@bsky-gp/db/schema';
-import type { Entry } from '@bsky-gp/db/schema';
-import { db } from './db';
+import { entries, snapshots } from './db-schema';
+import type { Entry } from './db-schema';
+import { db } from './db-schema';
 import type { EntryClass } from './constants';
 
 // ─── 公開型 ──────────────────────────────────────────────────────────────────

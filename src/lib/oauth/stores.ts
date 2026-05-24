@@ -1,7 +1,7 @@
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import { eq } from 'drizzle-orm';
-import { oauthStates, oauthSessions } from '@bsky-gp/db/schema';
+import { oauthStates, oauthSessions } from '../db-schema';
 import type {
   NodeSavedState,
   NodeSavedStateStore,

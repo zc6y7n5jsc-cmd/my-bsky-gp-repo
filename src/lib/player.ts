@@ -1,7 +1,7 @@
 import { eq, desc, asc } from 'drizzle-orm';
-import { entries, snapshots, oauthSessions } from '@bsky-gp/db/schema';
-import type { Entry, Snapshot } from '@bsky-gp/db/schema';
-import { db } from './db';
+import { entries, snapshots, oauthSessions } from './db-schema';
+import type { Entry, Snapshot } from './db-schema';
+import { db } from './db-schema';
 
 /** DID の全エントリー（新しい順）— 過去の挑戦履歴用 */
 export async function getAllEntriesForDid(did: string): Promise<Entry[]> {

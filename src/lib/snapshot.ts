@@ -1,7 +1,7 @@
 import { eq, and, gte, or, isNull, lt, sql } from 'drizzle-orm';
-import { entries, snapshots } from '@bsky-gp/db/schema';
-import type { Entry, Snapshot } from '@bsky-gp/db/schema';
-import { db } from './db';
+import { entries, snapshots } from './db-schema';
+import type { Entry, Snapshot } from './db-schema';
+import { db } from './db-schema';
 import type { BlueskyProfile } from './bluesky';
 import { checkAndFlagIfAnomalous } from './anomaly';
 
