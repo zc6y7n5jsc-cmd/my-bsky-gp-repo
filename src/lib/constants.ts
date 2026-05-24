@@ -27,7 +27,10 @@ export const DEVELOPER_BSKY_HANDLE = process.env.NEXT_PUBLIC_DEVELOPER_HANDLE ??
 export const DEVELOPER_BSKY_URL = `https://bsky.app/profile/${DEVELOPER_BSKY_HANDLE}`;
 
 // 公開 URL
+// ローカル開発では 127.0.0.1 を使う（RFC 8252: localhost は AT Protocol OAuth で拒否される）
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bsky-gp.vercel.app';
+// http:// で始まる場合はローカル環境と判定（127.0.0.1 / 本番は https://）
+export const IS_LOCAL = SITE_URL.startsWith('http://');
 
 // ハッシュタグ
 export const HASHTAG = '#BSKY_GP';

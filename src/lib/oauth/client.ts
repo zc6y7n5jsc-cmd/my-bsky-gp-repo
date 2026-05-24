@@ -1,8 +1,6 @@
 import { NodeOAuthClient } from '@atproto/oauth-client-node';
 import { createNeonStateStore, createNeonSessionStore } from './stores';
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bsky-gp.vercel.app';
-const IS_LOCAL = SITE_URL.startsWith('http://localhost') || SITE_URL.startsWith('http://127.0.0.1');
+import { SITE_URL, IS_LOCAL } from '../constants';
 
 const CLIENT_ID = `${SITE_URL}/client-metadata.json`;
 const REDIRECT_URI = `${SITE_URL}/api/auth/callback`;

@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
+import { SITE_URL } from '@/src/lib/constants';
 
 export const runtime = 'nodejs';
 // キャッシュなし（環境変数が変わっても即反映）
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bsky-gp.vercel.app';
+  const siteUrl = SITE_URL;
 
   const metadata = {
     client_id: `${siteUrl}/client-metadata.json`,
