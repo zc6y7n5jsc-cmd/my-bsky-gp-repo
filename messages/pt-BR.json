@@ -154,7 +154,11 @@
     "deleteCancel": "Cancelar",
     "deleting": "Excluindo...",
     "deleteSubmit": "Excluir",
-    "deleteError": "Falha ao excluir"
+    "deleteError": "Falha ao excluir",
+    "blueskyShareText": "Participando do desafio BSKY-GP de 30 dias! 🏁 #BSKY_GP",
+    "clipboardCopied": "Imagem copiada",
+    "clipboardHint": "Imagem do card copiada! Cole no seu post do Bluesky 📋",
+    "downloadError": "Falha ao gerar a imagem"
   },
   "player": {
     "overallRank": "Posição Geral",

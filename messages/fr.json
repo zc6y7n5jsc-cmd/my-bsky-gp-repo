@@ -154,7 +154,11 @@
     "deleteCancel": "Annuler",
     "deleting": "Suppression...",
     "deleteSubmit": "Supprimer",
-    "deleteError": "Échec de la suppression"
+    "deleteError": "Échec de la suppression",
+    "blueskyShareText": "Je participe au défi BSKY-GP de 30 jours ! 🏁 #BSKY_GP",
+    "clipboardCopied": "Image copiée",
+    "clipboardHint": "Image de la carte copiée dans le presse-papiers. Collez-la dans votre post Bluesky ! 📋",
+    "downloadError": "Échec de la génération de l'image"
   },
   "player": {
     "overallRank": "Classement général",

@@ -154,7 +154,11 @@
     "deleteCancel": "取消",
     "deleting": "刪除中...",
     "deleteSubmit": "刪除",
-    "deleteError": "刪除失敗"
+    "deleteError": "刪除失敗",
+    "blueskyShareText": "正在參加 BSKY-GP 30天粉絲挑戰！🏁 #BSKY_GP",
+    "clipboardCopied": "圖片已複製",
+    "clipboardHint": "卡片圖片已複製到剪貼簿，請貼到您的 Bluesky 貼文中 📋",
+    "downloadError": "圖片生成失敗"
   },
   "player": {
     "overallRank": "總合排名",

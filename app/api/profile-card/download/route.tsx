@@ -52,6 +52,20 @@ function buildFillPoints(
   return `${linePoints} ${w},${h} 0,${h}`;
 }
 
+// @vercel/og は外部URLを直接 fetch するため CORS や CDN の問題が起きやすい。
+// 事前に base64 data URL に変換しておく。
+async function toDataUrl(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) return null;
+    const buf  = await res.arrayBuffer();
+    const mime = res.headers.get('content-type') ?? 'image/jpeg';
+    return `data:${mime};base64,${Buffer.from(buf).toString('base64')}`;
+  } catch {
+    return null;
+  }
+}
+
 export async function POST() {
   try {
     const did = await getSessionDid();
@@ -76,8 +90,10 @@ export async function POST() {
     const gain        = entry?.maxMonthlyGain ?? 0;
     const overallRank = overallRankData.myRank?.rank ?? null;
     const classRank   = classRankData.myRank?.rank ?? null;
-    const avatar      = entry?.avatar ?? null;
     const baseline    = entry?.baselineFollowers ?? 0;
+
+    // アバター画像を data URL に変換（外部 URL fetch の問題を回避）
+    const avatarDataUrl = entry?.avatar ? await toDataUrl(entry.avatar) : null;
 
     const chartW = 340;
     const chartH = 70;
@@ -137,10 +153,10 @@ export async function POST() {
             }}
           >
             {/* Avatar */}
-            {avatar ? (
+            {avatarDataUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={avatar}
+                src={avatarDataUrl}
                 width={108}
                 height={108}
                 style={{
@@ -184,16 +200,15 @@ export async function POST() {
                 border: `1px solid ${clsColor}55`,
                 borderRadius: '100px',
                 padding: '8px 22px',
-                backdropFilter: 'blur(8px)',
               }}
             >
-              <div style={{ display: 'flex', width: '10px', height: '10px', borderRadius: '50%', background: clsColor, boxShadow: `0 0 6px ${clsColor}` }} />
+              <div style={{ display: 'flex', width: '10px', height: '10px', borderRadius: '50%', background: clsColor }} />
               <span style={{ display: 'flex', color: clsColor, fontSize: '18px', fontWeight: '700', marginLeft: '8px' }}>{cls} Class</span>
             </div>
 
             {/* Status */}
             <div style={{ display: 'flex', color: '#475569', fontSize: '16px', fontWeight: '500' }}>
-              {entry ? (entry.isCompleted ? '🏁 挑戦完了' : '🔥 参戦中') : '--'}
+              {entry ? (entry.isCompleted ? '🏁 Completed' : '🔥 Racing') : '--'}
             </div>
           </div>
 
@@ -218,7 +233,6 @@ export async function POST() {
                   borderRadius: '18px',
                   padding: '22px 30px',
                   flex: 1,
-                  backdropFilter: 'blur(8px)',
                 }}
               >
                 <div style={{ display: 'flex', color: '#475569', fontSize: '11px', letterSpacing: '2px', marginBottom: '8px' }}>
@@ -238,7 +252,6 @@ export async function POST() {
                   borderRadius: '18px',
                   padding: '22px 30px',
                   flex: 1,
-                  backdropFilter: 'blur(8px)',
                 }}
               >
                 <div style={{ display: 'flex', color: '#475569', fontSize: '11px', letterSpacing: '2px', marginBottom: '8px' }}>
@@ -259,7 +272,6 @@ export async function POST() {
                 borderRadius: '18px',
                 padding: '16px 30px',
                 gap: '16px',
-                backdropFilter: 'blur(8px)',
               }}
             >
               <div style={{ ...col, gap: '2px' }}>
@@ -278,12 +290,7 @@ export async function POST() {
                     viewBox={`0 0 ${chartW} ${chartH}`}
                     style={{ display: 'flex', overflow: 'hidden' }}
                   >
-                    {/* Fill area */}
-                    <polygon
-                      points={fillPoints}
-                      fill="rgba(74,222,128,0.12)"
-                    />
-                    {/* Line */}
+                    <polygon points={fillPoints} fill="rgba(74,222,128,0.12)" />
                     <polyline
                       points={linePoints}
                       fill="none"
@@ -335,12 +342,12 @@ export async function POST() {
     );
 
     const imageBuffer = await imageResponse.arrayBuffer();
-    const safeHandle = (entry?.handle ?? did).replace(/[^a-zA-Z0-9._-]/g, '_');
+    const safeHandle  = (entry?.handle ?? did).replace(/[^a-zA-Z0-9._-]/g, '_');
 
     return new Response(imageBuffer, {
       headers: {
         'Content-Type': 'image/png',
-        'Content-Disposition': `attachment; filename="profile-${safeHandle}.png"`,
+        'Content-Disposition': `attachment; filename="bsky-gp-${safeHandle}.png"`,
         'Cache-Control': 'no-store',
       },
     });

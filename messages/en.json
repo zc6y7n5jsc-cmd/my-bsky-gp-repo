@@ -154,7 +154,11 @@
     "deleteCancel": "Cancel",
     "deleting": "Deleting...",
     "deleteSubmit": "Delete",
-    "deleteError": "Failed to delete"
+    "deleteError": "Failed to delete",
+    "blueskyShareText": "Joined the BSKY-GP 30-day follower challenge! 🏁 #BSKY_GP",
+    "clipboardCopied": "Image copied",
+    "clipboardHint": "Card image copied to clipboard. Paste it into your Bluesky post! 📋",
+    "downloadError": "Failed to generate image"
   },
   "player": {
     "overallRank": "Overall Rank",

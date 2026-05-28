@@ -9,12 +9,23 @@ interface Props {
   siteUrl: string;
 }
 
+type ShareStatus = 'idle' | 'sharing' | 'copied' | 'error';
+
 export function ShareSection({ did, handle, siteUrl }: Props) {
   const t = useTranslations('myPage');
   const [copied, setCopied]           = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState(false);
+  const [shareStatus, setShareStatus] = useState<ShareStatus>('idle');
 
   const playerUrl = `${siteUrl}/player/${encodeURIComponent(did)}`;
+
+  /** プロフィールカード画像を API から取得して Blob を返す */
+  async function fetchCardBlob(): Promise<Blob> {
+    const res = await fetch('/api/profile-card/download', { method: 'POST' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.blob();
+  }
 
   const copyUrl = async () => {
     try {
@@ -22,34 +33,61 @@ export function ShareSection({ did, handle, siteUrl }: Props) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // fallback: no-op
+      // 非対応環境では何もしない
     }
   };
 
-  const downloadCard = async () => {
+  /** ① カードをダウンロード */
+  const handleDownloadCard = async () => {
     if (downloading) return;
     setDownloading(true);
+    setDownloadError(false);
     try {
-      const res = await fetch('/api/profile-card/download', { method: 'POST' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const blob = await res.blob();
+      const blob = await fetchCardBlob();
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement('a');
       a.href     = url;
-      a.download = `profile-${handle}.png`;
+      a.download = `bsky-gp-${handle}.png`;
+      document.body.appendChild(a);
       a.click();
-      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      // クリックが処理されてからオブジェクト URL を解放する
+      setTimeout(() => URL.revokeObjectURL(url), 200);
     } catch (err) {
-      console.error('card download failed', err);
+      console.error('[card download]', err);
+      setDownloadError(true);
     } finally {
       setDownloading(false);
     }
   };
 
-  const shareText = encodeURIComponent(
-    `BSKY-GP 30-day follower challenge!\n\n@${handle}: ${playerUrl}\n\n#BSKY_GP`,
-  );
-  const blueskyIntentUrl = `https://bsky.app/intent/compose?text=${shareText}`;
+  /** ③ Bluesky にシェア（画像をクリップボードへ + Intent URL を開く） */
+  const handleShareOnBluesky = async () => {
+    if (shareStatus === 'sharing') return;
+    setShareStatus('sharing');
+
+    const shareText = `${t('blueskyShareText')}\n@${handle}: ${playerUrl}`;
+    const intentUrl = `https://bsky.app/intent/compose?text=${encodeURIComponent(shareText)}`;
+
+    let imageCopied = false;
+    try {
+      const blob = await fetchCardBlob();
+      // Clipboard API で PNG 画像をコピー（HTTPS + ユーザージェスチャが必要）
+      if (typeof ClipboardItem !== 'undefined' && navigator.clipboard?.write) {
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        imageCopied = true;
+      }
+    } catch (err) {
+      // クリップボードコピーが失敗してもシェアは続行
+      console.warn('[bluesky share] clipboard write failed:', err);
+    }
+
+    // Intent URL を開く（画像コピー成・否に関わらず）
+    window.open(intentUrl, '_blank', 'noopener,noreferrer');
+
+    setShareStatus(imageCopied ? 'copied' : 'idle');
+    if (imageCopied) setTimeout(() => setShareStatus('idle'), 4000);
+  };
 
   return (
     <div className="glass glass-hover p-5">
@@ -61,23 +99,37 @@ export function ShareSection({ did, handle, siteUrl }: Props) {
       </div>
 
       <div className="flex flex-wrap gap-3">
+        {/* カードをダウンロード */}
         <button
-          onClick={downloadCard}
+          onClick={handleDownloadCard}
           disabled={downloading}
           className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 transition-all disabled:opacity-50 disabled:cursor-wait"
         >
           {downloading ? `⏳ ${t('downloadCardGenerating')}` : `🖼 ${t('downloadCard')}`}
         </button>
 
-        <a
-          href={blueskyIntentUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 transition-all"
+        {/* Bluesky にシェア */}
+        <button
+          onClick={handleShareOnBluesky}
+          disabled={shareStatus === 'sharing'}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition-all ${
+            shareStatus === 'copied'
+              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+              : shareStatus === 'error'
+              ? 'bg-red-500/20 text-red-300 border-red-500/30'
+              : 'bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border-sky-500/30 disabled:opacity-50 disabled:cursor-wait'
+          }`}
         >
-          🦋 {t('shareOnBluesky')}
-        </a>
+          {shareStatus === 'sharing'
+            ? `⏳ ${t('downloadCardGenerating')}`
+            : shareStatus === 'copied'
+            ? `✓ ${t('clipboardCopied')}`
+            : shareStatus === 'error'
+            ? t('downloadError')
+            : `🦋 ${t('shareOnBluesky')}`}
+        </button>
 
+        {/* URL をコピー */}
         <button
           onClick={copyUrl}
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all ${
@@ -89,6 +141,7 @@ export function ShareSection({ did, handle, siteUrl }: Props) {
           {copied ? `✓ ${t('urlCopied')}` : `📋 ${t('copyUrl')}`}
         </button>
 
+        {/* 個人ページへ */}
         <a
           href={`/player/${encodeURIComponent(did)}`}
           target="_blank"
@@ -98,6 +151,14 @@ export function ShareSection({ did, handle, siteUrl }: Props) {
           👤 {t('viewPlayerPage')}
         </a>
       </div>
+
+      {/* ステータスメッセージ */}
+      {downloadError && (
+        <p className="mt-3 text-red-400 text-xs">{t('downloadError')}</p>
+      )}
+      {shareStatus === 'copied' && (
+        <p className="mt-3 text-emerald-400 text-xs">{t('clipboardHint')}</p>
+      )}
     </div>
   );
 }

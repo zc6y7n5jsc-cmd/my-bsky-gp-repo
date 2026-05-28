@@ -154,7 +154,11 @@
     "deleteCancel": "キャンセル",
     "deleting": "削除中...",
     "deleteSubmit": "削除する",
-    "deleteError": "削除に失敗しました"
+    "deleteError": "削除に失敗しました",
+    "blueskyShareText": "BSKY-GP 30日間フォロワーチャレンジに参加中！🏁 #BSKY_GP",
+    "clipboardCopied": "画像をコピーしました",
+    "clipboardHint": "カード画像をクリップボードにコピーしました。Blueskyの投稿画面に貼り付けてください 📋",
+    "downloadError": "画像の生成に失敗しました"
   },
   "player": {
     "overallRank": "総合順位",
