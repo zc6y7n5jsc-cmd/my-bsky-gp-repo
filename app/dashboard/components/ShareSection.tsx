@@ -80,7 +80,10 @@ async function generateCardBlob(data: CardRenderData): Promise<Blob> {
   const LP = 72; // left padding
   const AV_X = LP + AV_R;
   const AV_Y = 208;
-  const avatarImg = data.avatarUrl ? await loadImage(data.avatarUrl) : null;
+  const proxiedUrl = data.avatarUrl
+    ? `/api/avatar-proxy?url=${encodeURIComponent(data.avatarUrl)}`
+    : null;
+  const avatarImg = proxiedUrl ? await loadImage(proxiedUrl) : null;
 
   ctx.save();
   ctx.beginPath();
