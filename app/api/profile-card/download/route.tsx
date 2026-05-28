@@ -1,5 +1,7 @@
 import { ImageResponse } from '@vercel/og';
 import { NextResponse } from 'next/server';
+import { readFile } from 'fs/promises';
+import path from 'path';
 import { getSessionDid } from '@/src/lib/session';
 import { getActiveEntry } from '@/src/lib/entries';
 import { getSnapshotsAsc } from '@/src/lib/player';
@@ -52,18 +54,37 @@ function buildFillPoints(
   return `${linePoints} ${w},${h} 0,${h}`;
 }
 
-// @vercel/og は外部URLを直接 fetch するため CORS や CDN の問題が起きやすい。
-// 事前に base64 data URL に変換しておく。
+// 外部画像を base64 data URL に変換（CORS・CDN エラーを回避）
 async function toDataUrl(url: string): Promise<string | null> {
   try {
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) return null;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(url, { cache: 'no-store', signal: controller.signal });
+    clearTimeout(timeout);
+    if (!res.ok) {
+      console.warn('[profile-card] avatar fetch not ok:', res.status, url);
+      return null;
+    }
     const buf  = await res.arrayBuffer();
     const mime = res.headers.get('content-type') ?? 'image/jpeg';
     return `data:${mime};base64,${Buffer.from(buf).toString('base64')}`;
-  } catch {
+  } catch (err) {
+    console.warn('[profile-card] avatar fetch failed:', err);
     return null;
   }
+}
+
+// public/fonts/ のフォントをファイルシステムから読み込む（本番でも確実）
+async function loadFonts(): Promise<{ name: string; data: ArrayBuffer; weight: 400 | 700; style: 'normal' }[]> {
+  const fontsDir = path.join(process.cwd(), 'public', 'fonts');
+  const [regular, bold] = await Promise.all([
+    readFile(path.join(fontsDir, 'Inter-Regular.ttf')),
+    readFile(path.join(fontsDir, 'Inter-Bold.ttf')),
+  ]);
+  return [
+    { name: 'Inter', data: regular.buffer as ArrayBuffer, weight: 400, style: 'normal' },
+    { name: 'Inter', data: bold.buffer    as ArrayBuffer, weight: 700, style: 'normal' },
+  ];
 }
 
 export async function POST() {
@@ -75,12 +96,16 @@ export async function POST() {
 
     const entry = await getActiveEntry(did).catch(() => null);
 
-    const [overallRankData, classRankData, snapshots] = await Promise.all([
+    const [overallRankData, classRankData, snapshots, fonts] = await Promise.all([
       getRankAroundUser(did, 'all', 'daily').catch(() => ({ myRank: null, around: [] })),
       entry
         ? getRankAroundUser(did, entry.class as RankingClass, 'daily').catch(() => ({ myRank: null, around: [] }))
         : Promise.resolve({ myRank: null, around: [] }),
       entry ? getSnapshotsAsc(entry.id, 30).catch(() => []) : Promise.resolve([]),
+      loadFonts().catch((err) => {
+        console.error('[profile-card] font load failed:', err);
+        return [];
+      }),
     ]);
 
     const name        = entry?.displayName || (entry ? `@${entry.handle}` : 'Player');
@@ -92,7 +117,7 @@ export async function POST() {
     const classRank   = classRankData.myRank?.rank ?? null;
     const baseline    = entry?.baselineFollowers ?? 0;
 
-    // アバター画像を data URL に変換（外部 URL fetch の問題を回避）
+    // アバター画像を data URL に変換（失敗時は null → イニシャルで代替）
     const avatarDataUrl = entry?.avatar ? await toDataUrl(entry.avatar) : null;
 
     const chartW = 340;
@@ -109,7 +134,7 @@ export async function POST() {
             width: '1200px',
             height: '600px',
             background: 'linear-gradient(135deg, #0a1628 0%, #0f1f3d 50%, #030812 100%)',
-            fontFamily: 'sans-serif',
+            fontFamily: 'Inter, sans-serif',
             position: 'relative',
             overflow: 'hidden',
           }}
@@ -184,10 +209,10 @@ export async function POST() {
             )}
 
             {/* Name */}
-            <div style={{ display: 'flex', color: 'white', fontSize: '34px', fontWeight: '800', maxWidth: '360px', lineHeight: '1.1' }}>
+            <div style={{ display: 'flex', color: 'white', fontSize: '34px', fontWeight: 700, maxWidth: '360px', lineHeight: '1.1' }}>
               {name}
             </div>
-            <div style={{ display: 'flex', color: '#64748b', fontSize: '20px' }}>
+            <div style={{ display: 'flex', color: '#64748b', fontSize: '20px', fontWeight: 400 }}>
               {handle}
             </div>
 
@@ -203,11 +228,11 @@ export async function POST() {
               }}
             >
               <div style={{ display: 'flex', width: '10px', height: '10px', borderRadius: '50%', background: clsColor }} />
-              <span style={{ display: 'flex', color: clsColor, fontSize: '18px', fontWeight: '700', marginLeft: '8px' }}>{cls} Class</span>
+              <span style={{ display: 'flex', color: clsColor, fontSize: '18px', fontWeight: 700, marginLeft: '8px' }}>{cls} Class</span>
             </div>
 
             {/* Status */}
-            <div style={{ display: 'flex', color: '#475569', fontSize: '16px', fontWeight: '500' }}>
+            <div style={{ display: 'flex', color: '#475569', fontSize: '16px', fontWeight: 400 }}>
               {entry ? (entry.isCompleted ? '🏁 Completed' : '🔥 Racing') : '--'}
             </div>
           </div>
@@ -235,10 +260,10 @@ export async function POST() {
                   flex: 1,
                 }}
               >
-                <div style={{ display: 'flex', color: '#475569', fontSize: '11px', letterSpacing: '2px', marginBottom: '8px' }}>
+                <div style={{ display: 'flex', color: '#475569', fontSize: '11px', letterSpacing: '2px', marginBottom: '8px', fontWeight: 400 }}>
                   TOTAL RANK
                 </div>
-                <div style={{ display: 'flex', color: '#FFD700', fontSize: '54px', fontWeight: '900', lineHeight: '1' }}>
+                <div style={{ display: 'flex', color: '#FFD700', fontSize: '54px', fontWeight: 700, lineHeight: '1' }}>
                   {overallRank != null ? `#${overallRank}` : '--'}
                 </div>
               </div>
@@ -254,10 +279,10 @@ export async function POST() {
                   flex: 1,
                 }}
               >
-                <div style={{ display: 'flex', color: '#475569', fontSize: '11px', letterSpacing: '2px', marginBottom: '8px' }}>
+                <div style={{ display: 'flex', color: '#475569', fontSize: '11px', letterSpacing: '2px', marginBottom: '8px', fontWeight: 400 }}>
                   {cls.toUpperCase()} RANK
                 </div>
-                <div style={{ display: 'flex', color: clsColor, fontSize: '54px', fontWeight: '900', lineHeight: '1' }}>
+                <div style={{ display: 'flex', color: clsColor, fontSize: '54px', fontWeight: 700, lineHeight: '1' }}>
                   {classRank != null ? `#${classRank}` : '--'}
                 </div>
               </div>
@@ -275,8 +300,8 @@ export async function POST() {
               }}
             >
               <div style={{ ...col, gap: '2px' }}>
-                <div style={{ display: 'flex', color: '#475569', fontSize: '11px', letterSpacing: '2px' }}>30-DAY GAIN</div>
-                <div style={{ display: 'flex', color: '#4ade80', fontSize: '44px', fontWeight: '900', lineHeight: '1' }}>
+                <div style={{ display: 'flex', color: '#475569', fontSize: '11px', letterSpacing: '2px', fontWeight: 400 }}>30-DAY GAIN</div>
+                <div style={{ display: 'flex', color: '#4ade80', fontSize: '44px', fontWeight: 700, lineHeight: '1' }}>
                   +{gain.toLocaleString()}
                 </div>
               </div>
@@ -318,10 +343,10 @@ export async function POST() {
             }}
           >
             <div style={{ ...row, gap: '10px' }}>
-              <span style={{ display: 'flex', color: '#38bdf8', fontSize: '24px', fontWeight: '900', letterSpacing: '-0.5px' }}>BSKY-GP</span>
-              <span style={{ display: 'flex', color: '#334155', fontSize: '13px', marginLeft: '6px' }}>Bluesky Grand Prix</span>
+              <span style={{ display: 'flex', color: '#38bdf8', fontSize: '24px', fontWeight: 700, letterSpacing: '-0.5px' }}>BSKY-GP</span>
+              <span style={{ display: 'flex', color: '#334155', fontSize: '13px', marginLeft: '6px', fontWeight: 400 }}>Bluesky Grand Prix</span>
             </div>
-            <span style={{ display: 'flex', color: '#1e3a5f', fontSize: '13px' }}>bsky-gp.vercel.app</span>
+            <span style={{ display: 'flex', color: '#1e3a5f', fontSize: '13px', fontWeight: 400 }}>bsky-gp.vercel.app</span>
           </div>
 
           {/* Separator line */}
@@ -338,7 +363,11 @@ export async function POST() {
           />
         </div>
       ),
-      { width: 1200, height: 600 },
+      {
+        width: 1200,
+        height: 600,
+        fonts: fonts.length > 0 ? fonts : undefined,
+      },
     );
 
     const imageBuffer = await imageResponse.arrayBuffer();
