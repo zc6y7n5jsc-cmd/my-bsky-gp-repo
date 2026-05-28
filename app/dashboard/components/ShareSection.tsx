@@ -343,13 +343,16 @@ export function ShareSection({ did, handle, siteUrl, card }: Props) {
     }
   };
 
-  /** ③ Bluesky にシェア（画像をクリップボードへ + Intent URL を開く） */
+  /** Bluesky にシェア（画像をクリップボードへ + Intent URL を開く） */
   const handleShareOnBluesky = async () => {
     if (shareStatus === 'sharing') return;
     setShareStatus('sharing');
 
+    // ② ユーザージェスチャーが有効な間にウィンドウを先に開く
+    //    （await の後で window.open するとブラウザがポップアップをブロックするため）
     const shareText = `${t('blueskyShareText')}\n@${handle}: ${playerUrl}`;
     const intentUrl = `https://bsky.app/intent/compose?text=${encodeURIComponent(shareText)}`;
+    const win = window.open('about:blank', '_blank', 'noopener,noreferrer');
 
     let imageCopied = false;
     try {
@@ -362,7 +365,14 @@ export function ShareSection({ did, handle, siteUrl, card }: Props) {
       console.warn('[bluesky share] clipboard write failed:', err);
     }
 
-    window.open(intentUrl, '_blank', 'noopener,noreferrer');
+    // 先に開いたウィンドウを Bluesky に遷移させる
+    if (win) {
+      win.location.href = intentUrl;
+    } else {
+      // ポップアップがブロックされた場合のフォールバック
+      window.open(intentUrl, '_blank', 'noopener,noreferrer');
+    }
+
     setShareStatus(imageCopied ? 'copied' : 'idle');
     if (imageCopied) setTimeout(() => setShareStatus('idle'), 4000);
   };
