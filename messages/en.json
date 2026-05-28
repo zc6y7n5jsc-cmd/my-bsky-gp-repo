@@ -157,7 +157,8 @@
     "deleteError": "Failed to delete",
     "blueskyShareText": "Joined the BSKY-GP 30-day follower challenge! 🏁 #BSKY_GP",
     "clipboardCopied": "Image copied",
-    "clipboardHint": "Card image copied to clipboard. Paste it into your Bluesky post! 📋",
+    "clipboardHint": "📋 Card image copied! Press Cmd+V (Mac) or Ctrl+V (Windows) to paste it into your Bluesky post.",
+    "clipboardFailed": "Could not copy image to clipboard. Please download the card and attach it manually.",
     "downloadError": "Failed to generate image"
   },
   "player": {

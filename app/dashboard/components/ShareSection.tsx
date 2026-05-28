@@ -27,7 +27,7 @@ interface Props {
   card: CardRenderData;
 }
 
-type ShareStatus = 'idle' | 'sharing' | 'copied' | 'error';
+type ShareStatus = 'idle' | 'sharing' | 'copied' | 'clipFailed' | 'error';
 
 const CLASS_COLORS: Record<string, string> = {
   Rookie: '#94a3b8', Rising: '#34d399', Challenger: '#38bdf8',
@@ -343,31 +343,44 @@ export function ShareSection({ did, handle, siteUrl, card }: Props) {
     }
   };
 
-  /** Bluesky にシェア（① intent URL を即座に開く → ② 非同期でカード生成＆クリップボードコピー） */
+  /** Bluesky にシェア（画像クリップボードコピー → toast → intent URL を開く） */
   const handleShareOnBluesky = async () => {
     if (shareStatus === 'sharing') return;
     setShareStatus('sharing');
 
-    // ① shareText は同期で構築できるため、await の前に window.open を呼ぶ
-    //    → ユーザージェスチャーのコンテキストが有効なのでポップアップがブロックされない
     const shareText = `${t('blueskyShareText')}\n@${handle}: ${playerUrl}`;
     const intentUrl = `https://bsky.app/intent/compose?text=${encodeURIComponent(shareText)}`;
-    window.open(intentUrl, '_blank', 'noopener,noreferrer');
 
-    // ② 非同期でカード画像を生成してクリップボードにコピー（失敗してもシェアには影響しない）
+    // ユーザージェスチャーが有効な間にウィンドウを先行確保する
+    // （noopener を付けると null が返るため外す → 直後に navigate するので安全）
+    const win = window.open('about:blank', '_blank');
+
+    // カード生成 → クリップボードコピー
+    let imageCopied = false;
     try {
       const blob = await generateCardBlob(card);
       if (typeof ClipboardItem !== 'undefined' && navigator.clipboard?.write) {
         await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-        setShareStatus('copied');
-        setTimeout(() => setShareStatus('idle'), 4000);
-        return;
+        imageCopied = true;
       }
     } catch (err) {
       console.warn('[bluesky share] clipboard write failed:', err);
     }
 
-    setShareStatus('idle');
+    // 先に確保したウィンドウを Bluesky に遷移させる
+    if (win) {
+      win.location.href = intentUrl;
+    } else {
+      window.open(intentUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    // toast 表示
+    if (imageCopied) {
+      setShareStatus('copied');
+    } else {
+      setShareStatus('clipFailed');
+    }
+    setTimeout(() => setShareStatus('idle'), 6000);
   };
 
   return (
@@ -396,8 +409,8 @@ export function ShareSection({ did, handle, siteUrl, card }: Props) {
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition-all ${
             shareStatus === 'copied'
               ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
-              : shareStatus === 'error'
-              ? 'bg-red-500/20 text-red-300 border-red-500/30'
+              : shareStatus === 'clipFailed' || shareStatus === 'error'
+              ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
               : 'bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border-sky-500/30 disabled:opacity-50 disabled:cursor-wait'
           }`}
         >
@@ -405,8 +418,6 @@ export function ShareSection({ did, handle, siteUrl, card }: Props) {
             ? `⏳ ${t('downloadCardGenerating')}`
             : shareStatus === 'copied'
             ? `✓ ${t('clipboardCopied')}`
-            : shareStatus === 'error'
-            ? t('downloadError')
             : `🦋 ${t('shareOnBluesky')}`}
         </button>
 
@@ -439,6 +450,9 @@ export function ShareSection({ did, handle, siteUrl, card }: Props) {
       )}
       {shareStatus === 'copied' && (
         <p className="mt-3 text-emerald-400 text-xs">{t('clipboardHint')}</p>
+      )}
+      {shareStatus === 'clipFailed' && (
+        <p className="mt-3 text-amber-400 text-xs">{t('clipboardFailed')}</p>
       )}
     </div>
   );

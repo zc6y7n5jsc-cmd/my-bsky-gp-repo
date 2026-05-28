@@ -157,7 +157,8 @@
     "deleteError": "削除に失敗しました",
     "blueskyShareText": "BSKY-GP 30日間フォロワーチャレンジに参加中！🏁 #BSKY_GP",
     "clipboardCopied": "画像をコピーしました",
-    "clipboardHint": "カード画像をクリップボードにコピーしました。Blueskyの投稿画面に貼り付けてください 📋",
+    "clipboardHint": "📋 カード画像をコピーしました！投稿画面で Cmd+V（Mac）または Ctrl+V（Windows）で貼り付けてください。",
+    "clipboardFailed": "クリップボードへのコピーに失敗しました。カードをダウンロードして手動で添付してください。",
     "downloadError": "画像の生成に失敗しました"
   },
   "player": {

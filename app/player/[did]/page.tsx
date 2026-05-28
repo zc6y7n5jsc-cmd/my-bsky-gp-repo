@@ -91,11 +91,12 @@ export default async function PlayerPage({ params }: Props) {
             <div className="flex items-start gap-5">
               {entry.avatar ? (
                 <Image
-                  src={entry.avatar}
+                  src={`/api/avatar-proxy?url=${encodeURIComponent(entry.avatar)}`}
                   alt={entry.displayName ?? entry.handle}
                   width={88}
                   height={88}
                   className="rounded-full ring-2 ring-sky-500/30 flex-shrink-0"
+                  unoptimized
                 />
               ) : (
                 <div className="w-22 h-22 rounded-full bg-slate-700 flex items-center justify-center text-3xl text-white flex-shrink-0 w-[88px] h-[88px]">

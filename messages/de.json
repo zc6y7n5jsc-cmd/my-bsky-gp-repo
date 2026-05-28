@@ -157,7 +157,8 @@
     "deleteError": "Löschen fehlgeschlagen",
     "blueskyShareText": "Ich nehme an der BSKY-GP 30-Tage-Challenge teil! 🏁 #BSKY_GP",
     "clipboardCopied": "Bild kopiert",
-    "clipboardHint": "Kartenbild in die Zwischenablage kopiert. Füge es in deinen Bluesky-Post ein! 📋",
+    "clipboardHint": "📋 Kartenbild kopiert! Drücke Cmd+V (Mac) oder Ctrl+V (Windows) zum Einfügen in deinen Bluesky-Post.",
+    "clipboardFailed": "Bild konnte nicht kopiert werden. Bitte lade die Karte herunter und füge sie manuell hinzu.",
     "downloadError": "Bild konnte nicht erstellt werden"
   },
   "player": {

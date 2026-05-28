@@ -157,7 +157,8 @@
     "deleteError": "Falha ao excluir",
     "blueskyShareText": "Participando do desafio BSKY-GP de 30 dias! 🏁 #BSKY_GP",
     "clipboardCopied": "Imagem copiada",
-    "clipboardHint": "Imagem do card copiada! Cole no seu post do Bluesky 📋",
+    "clipboardHint": "📋 Imagem copiada! Pressione Cmd+V (Mac) ou Ctrl+V (Windows) para colar no seu post do Bluesky.",
+    "clipboardFailed": "Não foi possível copiar a imagem. Baixe o card e anexe manualmente.",
     "downloadError": "Falha ao gerar a imagem"
   },
   "player": {

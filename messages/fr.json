@@ -157,7 +157,8 @@
     "deleteError": "Échec de la suppression",
     "blueskyShareText": "Je participe au défi BSKY-GP de 30 jours ! 🏁 #BSKY_GP",
     "clipboardCopied": "Image copiée",
-    "clipboardHint": "Image de la carte copiée dans le presse-papiers. Collez-la dans votre post Bluesky ! 📋",
+    "clipboardHint": "📋 Image copiée ! Appuyez sur Cmd+V (Mac) ou Ctrl+V (Windows) pour coller dans votre post Bluesky.",
+    "clipboardFailed": "Impossible de copier l'image. Téléchargez la carte et attachez-la manuellement.",
     "downloadError": "Échec de la génération de l'image"
   },
   "player": {
