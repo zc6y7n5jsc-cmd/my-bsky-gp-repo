@@ -81,19 +81,23 @@
     "title": "Regras",
     "register": {
       "title": "Cadastro",
-      "desc": "Faça login com sua conta Bluesky para se cadastrar. O número de seguidores no cadastro vira sua linha de base."
+      "desc": "Faça login com sua conta Bluesky para se cadastrar. O número de seguidores no cadastro vira sua linha de base.",
+      "detail": "Basta fazer login com sua conta Bluesky para se cadastrar.\n\nSeu número de seguidores no cadastro é registrado como 'linha de base' — o ponto de partida do seu desafio de 30 dias.\n\nVocê pode se cadastrar novamente após os 30 dias terminarem."
     },
     "race": {
       "title": "Corrida de 30 Dias",
-      "desc": "Registramos um snapshot dos seus seguidores todo dia por 30 dias. Compita pelo maior ganho."
+      "desc": "Registramos um snapshot dos seus seguidores todo dia por 30 dias. Compita pelo maior ganho.",
+      "detail": "A partir do cadastro, seus seguidores são registrados em snapshot automaticamente todos os dias por 30 dias.\n\nA competição é baseada no maior ganho — quem mais cresce em seguidores fica no topo.\n\nOs ganhos são contabilizados em três períodos: diário, semanal e mensal."
     },
     "classSystem": {
       "title": "Sistema de Classes",
-      "desc": "Dividido em classes pelo número de seguidores base (Rookie a Star). Compita na sua classe e no geral."
+      "desc": "Dividido em classes pelo número de seguidores base (Rookie a Star). Compita na sua classe e no geral.",
+      "detail": "Sua classe é determinada automaticamente pelo número de seguidores no cadastro:\n\n・Rookie (0–99)\n・Rising (100–499)\n・Challenger (500–999)\n・Established (1.000–4.999)\n・Influencer (5.000–9.999)\n・Star (10.000+)\n\nVocê compete no ranking da sua classe e no ranking geral de todas as classes."
     },
     "periods": {
       "title": "Diário · Semanal · Mensal",
-      "desc": "Ganhos acumulados em 3 períodos. Cada um tem seu próprio ranking independente para avaliar seu crescimento."
+      "desc": "Ganhos acumulados em 3 períodos. Cada um tem seu próprio ranking independente para avaliar seu crescimento.",
+      "detail": "Os ganhos de seguidores são acumulados em três períodos:\n\n・Diário: ganho nas últimas 24 horas\n・Semanal: ganho nos últimos 7 dias\n・Mensal: ganho total nos 30 dias do desafio\n\nCada período tem seu próprio ranking independente — seja no sprint ou no crescimento constante, há espaço para todos."
     }
   },
   "myPage": {

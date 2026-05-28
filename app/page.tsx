@@ -10,7 +10,7 @@ import { RulesCard } from './components/RulesCard';
 import { FadeInCard } from './components/FadeInCard';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import type { Locale } from '@/src/i18n/request';
-import { DEVELOPER_BSKY_URL } from '@/src/lib/constants';
+import { DEVELOPER_BSKY_URL, DEVELOPER_BSKY_HANDLE } from '@/src/lib/constants';
 import { getAvailableSeasons } from '@/src/lib/champions';
 
 export default async function HomePage() {
@@ -88,7 +88,7 @@ export default async function HomePage() {
                 rel="noopener noreferrer"
                 className="text-slate-500 hover:text-sky-400 transition-colors"
               >
-                {tf('developer')} @Bluesky
+                {tf('developer')} @{DEVELOPER_BSKY_HANDLE}
               </a>
               <LanguageSwitcher currentLocale={locale as Locale} />
             </div>

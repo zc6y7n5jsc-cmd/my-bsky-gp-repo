@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchBlueskyProfile } from '@/src/lib/bluesky';
 import { getUnrecordedActiveEntries, recordSnapshot } from '@/src/lib/snapshot';
@@ -10,12 +11,18 @@ export const maxDuration = 300; // 5 分（Vercel Pro では最大 900 秒）
 
 function verifyCronAuth(req: NextRequest): boolean {
   const cronSecret = process.env.CRON_SECRET;
-  // CRON_SECRET 未設定なら開発環境として認証スキップ
-  if (!cronSecret) return true;
+  // 本番では CRON_SECRET 必須
+  if (!cronSecret) return process.env.NODE_ENV !== 'production';
 
   // Vercel Cron は Authorization: Bearer <CRON_SECRET> を自動付与する
-  const auth = req.headers.get('Authorization');
-  return auth === `Bearer ${cronSecret}`;
+  const auth = req.headers.get('Authorization') ?? '';
+  const expected = `Bearer ${cronSecret}`;
+  if (auth.length !== expected.length) return false;
+  try {
+    return timingSafeEqual(Buffer.from(auth), Buffer.from(expected));
+  } catch {
+    return false;
+  }
 }
 
 export async function GET(req: NextRequest) {

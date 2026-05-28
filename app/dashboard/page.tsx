@@ -19,6 +19,7 @@ import { AutoSync } from './components/AutoSync';
 import { MilestoneToast } from './components/MilestoneToast';
 import { CompletionModal } from './components/CompletionModal';
 import { AnimatedNumber } from './components/AnimatedNumber';
+import { RegisterButton } from './components/RegisterButton';
 import type { EntryClass } from '@/src/lib/constants';
 
 export const metadata: Metadata = {
@@ -195,12 +196,7 @@ export default async function DashboardPage() {
               <div className="text-5xl mb-4">🏁</div>
               <h2 className="text-white font-bold text-xl mb-2">{t('noEntry')}</h2>
               <p className="text-slate-400 text-sm mb-6">{t('noEntryDesc')}</p>
-              <Link
-                href="/api/entries/register"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-sky-500 hover:bg-sky-400 text-white font-bold rounded-full transition-all text-sm"
-              >
-                🚀 {t('joinNow')}
-              </Link>
+              <RegisterButton />
             </div>
           </FadeInCard>
         )}

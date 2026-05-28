@@ -25,16 +25,10 @@ export async function GET(
   const periodParam = searchParams.get('period') ?? 'daily';
 
   if (!isValidClass(classParam)) {
-    return NextResponse.json(
-      { error: `Invalid class: ${classParam}` },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'Invalid class parameter' }, { status: 400 });
   }
   if (!isValidPeriod(periodParam)) {
-    return NextResponse.json(
-      { error: `Invalid period: ${periodParam}` },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'Invalid period parameter' }, { status: 400 });
   }
 
   const result = await getRankAroundUser(decodedDid, classParam, periodParam);

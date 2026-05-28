@@ -11,16 +11,10 @@ export async function GET(req: NextRequest) {
   const pageParam = searchParams.get('page') ?? '1';
 
   if (!isValidClass(classParam)) {
-    return NextResponse.json(
-      { error: `Invalid class: ${classParam}` },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'Invalid class parameter' }, { status: 400 });
   }
   if (!isValidPeriod(periodParam)) {
-    return NextResponse.json(
-      { error: `Invalid period: ${periodParam}` },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'Invalid period parameter' }, { status: 400 });
   }
 
   const page = Math.max(1, parseInt(pageParam, 10) || 1);

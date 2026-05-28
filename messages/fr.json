@@ -81,19 +81,23 @@
     "title": "Règles",
     "register": {
       "title": "Inscription",
-      "desc": "Connectez-vous avec votre compte Bluesky pour vous inscrire. Le nombre de followers à l'inscription devient votre référence."
+      "desc": "Connectez-vous avec votre compte Bluesky pour vous inscrire. Le nombre de followers à l'inscription devient votre référence.",
+      "detail": "Connectez-vous simplement avec votre compte Bluesky pour vous inscrire.\n\nVotre nombre de followers à l'inscription est enregistré comme 'référence' — le point de départ de votre défi de 30 jours.\n\nVous pouvez vous réinscrire à tout moment après vos 30 jours."
     },
     "race": {
       "title": "Course de 30 jours",
-      "desc": "Un snapshot de vos followers est enregistré chaque jour pendant 30 jours. Concourez sur le gain maximum."
+      "desc": "Un snapshot de vos followers est enregistré chaque jour pendant 30 jours. Concourez sur le gain maximum.",
+      "detail": "À partir de l'inscription, votre nombre de followers est enregistré en snapshot automatiquement chaque jour pendant 30 jours.\n\nLa compétition est basée sur le gain maximum — le participant qui augmente le plus ses followers est en tête.\n\nLes gains sont comptabilisés sur trois périodes : quotidienne, hebdomadaire et mensuelle."
     },
     "classSystem": {
       "title": "Système de classes",
-      "desc": "Classé par classes selon les followers de référence (Rookie à Star). Concourez dans votre classe et au général."
+      "desc": "Classé par classes selon les followers de référence (Rookie à Star). Concourez dans votre classe et au général.",
+      "detail": "Votre classe est automatiquement déterminée par votre nombre de followers à l'inscription :\n\n・Rookie (0–99)\n・Rising (100–499)\n・Challenger (500–999)\n・Established (1 000–4 999)\n・Influencer (5 000–9 999)\n・Star (10 000+)\n\nVous concourez dans le classement de votre classe et dans le classement général toutes classes confondues."
     },
     "periods": {
       "title": "Quotidien · Hebdomadaire · Mensuel",
-      "desc": "Les gains sont agrégés sur 3 périodes. Chacune a son propre classement pour évaluer votre croissance sous plusieurs angles."
+      "desc": "Les gains sont agrégés sur 3 périodes. Chacune a son propre classement pour évaluer votre croissance sous plusieurs angles.",
+      "detail": "Les gains de followers sont agrégés sur trois périodes :\n\n・Quotidien : gain des dernières 24 heures\n・Hebdomadaire : gain des 7 derniers jours\n・Mensuel : gain total sur les 30 jours du défi\n\nChaque période a son propre classement indépendant, que vous excelliez dans les sprints ou la croissance régulière."
     }
   },
   "myPage": {

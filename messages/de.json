@@ -81,19 +81,23 @@
     "title": "Regeln",
     "register": {
       "title": "Registrierung",
-      "desc": "Melde dich mit deinem Bluesky-Konto an. Deine Follower-Zahl bei der Anmeldung wird zur Basislinie."
+      "desc": "Melde dich mit deinem Bluesky-Konto an. Deine Follower-Zahl bei der Anmeldung wird zur Basislinie.",
+      "detail": "Melde dich einfach mit deinem Bluesky-Konto an, um dich zu registrieren.\n\nDeine Follower-Zahl bei der Registrierung wird als 'Basislinie' gespeichert — der Startpunkt deiner 30-Tage-Challenge.\n\nNach Ablauf der 30 Tage kannst du jederzeit erneut mitmachen."
     },
     "race": {
       "title": "30-Tage-Rennen",
-      "desc": "Täglich wird ein Snapshot deiner Follower-Zahl aufgezeichnet. Konkurriere um den maximalen Zuwachs."
+      "desc": "Täglich wird ein Snapshot deiner Follower-Zahl aufgezeichnet. Konkurriere um den maximalen Zuwachs.",
+      "detail": "Ab der Registrierung wird deine Follower-Zahl 30 Tage lang täglich automatisch als Snapshot gespeichert.\n\nDer Wettbewerb basiert auf dem maximalen Zuwachs — wer am meisten Follower gewinnt, rangiert oben.\n\nZuwächse werden in drei Zeiträumen zusammengefasst: täglich, wöchentlich und monatlich."
     },
     "classSystem": {
       "title": "Klassensystem",
-      "desc": "Eingeteilt nach Basisfollower-Zahl (Rookie bis Star). Konkurriere innerhalb deiner Klasse und gesamt."
+      "desc": "Eingeteilt nach Basisfollower-Zahl (Rookie bis Star). Konkurriere innerhalb deiner Klasse und gesamt.",
+      "detail": "Deine Klasse wird automatisch durch deine Follower-Zahl bei der Registrierung bestimmt:\n\n・Rookie (0–99)\n・Rising (100–499)\n・Challenger (500–999)\n・Established (1.000–4.999)\n・Influencer (5.000–9.999)\n・Star (10.000+)\n\nDu trittst in deiner Klassen-Rangliste und in der Gesamtrangliste aller Klassen an."
     },
     "periods": {
       "title": "Täglich · Wöchentlich · Monatlich",
-      "desc": "Zuwächse werden in 3 Zeiträumen aggregiert. Jeder hat ein eigenes Ranking, um dein Wachstum mehrfach zu bewerten."
+      "desc": "Zuwächse werden in 3 Zeiträumen aggregiert. Jeder hat ein eigenes Ranking, um dein Wachstum mehrfach zu bewerten.",
+      "detail": "Follower-Zuwächse werden in drei Zeiträumen aggregiert:\n\n・Täglich: Zuwachs in den letzten 24 Stunden\n・Wöchentlich: Zuwachs in den letzten 7 Tagen\n・Monatlich: Gesamtzuwachs über die 30-Tage-Challenge\n\nJeder Zeitraum hat sein eigenes Ranking — ob kurzer Sprint oder konstantes Wachstum, hier findest du deinen Platz."
     }
   },
   "myPage": {

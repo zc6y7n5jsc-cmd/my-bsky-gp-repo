@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { desc } from 'drizzle-orm';
 import { entries, db } from '@/src/lib/db-schema';
@@ -8,7 +9,14 @@ export const runtime = 'nodejs';
 function verifyAdminAuth(req: NextRequest): boolean {
   const secret = process.env.ADMIN_SECRET;
   if (!secret) return false;
-  return req.headers.get('Authorization') === `Bearer ${secret}`;
+  const provided = req.headers.get('Authorization') ?? '';
+  const expected = `Bearer ${secret}`;
+  if (provided.length !== expected.length) return false;
+  try {
+    return timingSafeEqual(Buffer.from(provided), Buffer.from(expected));
+  } catch {
+    return false;
+  }
 }
 
 export async function GET(req: NextRequest) {

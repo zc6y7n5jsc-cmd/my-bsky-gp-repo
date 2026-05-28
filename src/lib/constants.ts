@@ -23,7 +23,7 @@ export function determineClass(followers: number): EntryClass {
 export const RACE_DURATION_DAYS = 30;
 
 // 開発者情報（後から差し替え可能）
-export const DEVELOPER_BSKY_HANDLE = process.env.NEXT_PUBLIC_DEVELOPER_HANDLE ?? '@your-handle.bsky.social';
+export const DEVELOPER_BSKY_HANDLE = (process.env.NEXT_PUBLIC_DEVELOPER_HANDLE ?? 'bsky-gp.bsky.social').replace(/^@/, '');
 export const DEVELOPER_BSKY_URL = `https://bsky.app/profile/${DEVELOPER_BSKY_HANDLE}`;
 
 // 公開 URL
