@@ -187,7 +187,23 @@ export default async function DashboardPage() {
             </FadeInCard>
 
             <FadeInCard delay={160}>
-              <ShareSection did={did} handle={handle} siteUrl={siteUrl} />
+              <ShareSection
+                did={did}
+                handle={handle}
+                siteUrl={siteUrl}
+                card={{
+                  displayName,
+                  handle,
+                  avatarUrl,
+                  cls: entry.class,
+                  gain,
+                  overallRank,
+                  classRank,
+                  snapshots: snapshots.map((s) => ({ followersCount: s.followersCount })),
+                  baseline: entry.baselineFollowers,
+                  isCompleted: entry.isCompleted,
+                }}
+              />
             </FadeInCard>
           </>
         ) : (
