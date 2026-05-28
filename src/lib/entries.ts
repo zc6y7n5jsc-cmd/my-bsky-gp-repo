@@ -39,39 +39,37 @@ export async function registerEntry(
   const endsAt = new Date(now);
   endsAt.setUTCDate(endsAt.getUTCDate() + RACE_DURATION_DAYS);
 
-  return await db.transaction(async (tx) => {
-    const [entry] = await tx
-      .insert(entries)
-      .values({
-        did,
-        handle: profile.handle,
-        displayName: profile.displayName ?? null,
-        avatar: profile.avatar ?? null,
-        class: entryClass,
-        baselineFollowers: followersCount,
-        season,
-        startedAt: now,
-        endsAt,
-        isCompleted: false,
-        isFlagged: false,
-        isBanned: false,
-        // 集計キャッシュ初期値
-        currentFollowers: followersCount,
-        maxDailyGain: 0,
-        maxWeeklyGain: 0,
-        maxMonthlyGain: 0,
-      })
-      .returning();
+  // neon-http はトランザクション未対応のため順次 INSERT
+  const [entry] = await db
+    .insert(entries)
+    .values({
+      did,
+      handle: profile.handle,
+      displayName: profile.displayName ?? null,
+      avatar: profile.avatar ?? null,
+      class: entryClass,
+      baselineFollowers: followersCount,
+      season,
+      startedAt: now,
+      endsAt,
+      isCompleted: false,
+      isFlagged: false,
+      isBanned: false,
+      currentFollowers: followersCount,
+      maxDailyGain: 0,
+      maxWeeklyGain: 0,
+      maxMonthlyGain: 0,
+    })
+    .returning();
 
-    // 初回スナップショット（= baseline）を記録
-    await tx.insert(snapshots).values({
-      entryId: entry.id,
-      followersCount,
-      capturedAt: now,
-    });
-
-    return entry;
+  // 初回スナップショット（= baseline）を記録
+  await db.insert(snapshots).values({
+    entryId: entry.id,
+    followersCount,
+    capturedAt: now,
   });
+
+  return entry;
 }
 
 // NOTE: markCompletedIfExpired / syncProfileToEntry / getUnrecordedActiveEntries は

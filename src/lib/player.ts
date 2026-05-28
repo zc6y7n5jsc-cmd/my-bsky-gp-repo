@@ -1,4 +1,4 @@
-import { eq, desc, asc } from 'drizzle-orm';
+import { eq, desc, asc, inArray } from 'drizzle-orm';
 import { entries, snapshots, oauthSessions } from './db-schema';
 import type { Entry, Snapshot } from './db-schema';
 import { db } from './db-schema';
@@ -43,8 +43,18 @@ export async function getSnapshotsAsc(entryId: number, limit = 30): Promise<Snap
  * OAuth セッションも削除。
  */
 export async function deleteUserData(did: string): Promise<void> {
-  await db.transaction(async (tx) => {
-    await tx.delete(entries).where(eq(entries.did, did));
-    await tx.delete(oauthSessions).where(eq(oauthSessions.key, did));
-  });
+  // neon-http はトランザクション未対応のため順次 DELETE
+  // CASCADE が DB になければ snapshots を先に明示削除
+  const userEntries = await db
+    .select({ id: entries.id })
+    .from(entries)
+    .where(eq(entries.did, did));
+
+  if (userEntries.length > 0) {
+    const ids = userEntries.map((e) => e.id);
+    await db.delete(snapshots).where(inArray(snapshots.entryId, ids));
+  }
+
+  await db.delete(entries).where(eq(entries.did, did));
+  await db.delete(oauthSessions).where(eq(oauthSessions.key, did));
 }
