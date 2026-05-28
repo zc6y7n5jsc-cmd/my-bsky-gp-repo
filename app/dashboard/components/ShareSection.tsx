@@ -343,38 +343,31 @@ export function ShareSection({ did, handle, siteUrl, card }: Props) {
     }
   };
 
-  /** Bluesky にシェア（画像をクリップボードへ + Intent URL を開く） */
+  /** Bluesky にシェア（① intent URL を即座に開く → ② 非同期でカード生成＆クリップボードコピー） */
   const handleShareOnBluesky = async () => {
     if (shareStatus === 'sharing') return;
     setShareStatus('sharing');
 
-    // ② ユーザージェスチャーが有効な間にウィンドウを先に開く
-    //    （await の後で window.open するとブラウザがポップアップをブロックするため）
+    // ① shareText は同期で構築できるため、await の前に window.open を呼ぶ
+    //    → ユーザージェスチャーのコンテキストが有効なのでポップアップがブロックされない
     const shareText = `${t('blueskyShareText')}\n@${handle}: ${playerUrl}`;
     const intentUrl = `https://bsky.app/intent/compose?text=${encodeURIComponent(shareText)}`;
-    const win = window.open('about:blank', '_blank', 'noopener,noreferrer');
+    window.open(intentUrl, '_blank', 'noopener,noreferrer');
 
-    let imageCopied = false;
+    // ② 非同期でカード画像を生成してクリップボードにコピー（失敗してもシェアには影響しない）
     try {
       const blob = await generateCardBlob(card);
       if (typeof ClipboardItem !== 'undefined' && navigator.clipboard?.write) {
         await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-        imageCopied = true;
+        setShareStatus('copied');
+        setTimeout(() => setShareStatus('idle'), 4000);
+        return;
       }
     } catch (err) {
       console.warn('[bluesky share] clipboard write failed:', err);
     }
 
-    // 先に開いたウィンドウを Bluesky に遷移させる
-    if (win) {
-      win.location.href = intentUrl;
-    } else {
-      // ポップアップがブロックされた場合のフォールバック
-      window.open(intentUrl, '_blank', 'noopener,noreferrer');
-    }
-
-    setShareStatus(imageCopied ? 'copied' : 'idle');
-    if (imageCopied) setTimeout(() => setShareStatus('idle'), 4000);
+    setShareStatus('idle');
   };
 
   return (

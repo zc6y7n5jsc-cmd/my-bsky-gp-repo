@@ -172,7 +172,8 @@
     "shareOnBluesky": "在 Bluesky 上分享",
     "viewRanking": "查看排行榜",
     "chartNoData": "無快照資料",
-    "gainLabel": "增加數"
+    "gainLabel": "增加數",
+    "blueskyShareText": "來看看 {name} 的 BSKY-GP 30天挑戰！🏁 {url} #BSKY_GP"
   },
   "milestone": {
     "toast": "距離 {nextClass} 還差 {count} 位粉絲！",

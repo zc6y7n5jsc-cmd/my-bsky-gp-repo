@@ -172,7 +172,8 @@
     "shareOnBluesky": "Blueskyでシェア",
     "viewRanking": "ランキングを見る",
     "chartNoData": "スナップショットデータなし",
-    "gainLabel": "増加数"
+    "gainLabel": "増加数",
+    "blueskyShareText": "{name} さんの BSKY-GP 30日間チャレンジをチェック！🏁 {url} #BSKY_GP"
   },
   "milestone": {
     "toast": "{nextClass} まであと {count} 人！",

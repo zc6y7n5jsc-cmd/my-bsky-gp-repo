@@ -172,7 +172,8 @@
     "shareOnBluesky": "Auf Bluesky teilen",
     "viewRanking": "Rangliste anzeigen",
     "chartNoData": "Keine Snapshot-Daten",
-    "gainLabel": "Zuwachs"
+    "gainLabel": "Zuwachs",
+    "blueskyShareText": "Schau dir {name}'s BSKY-GP 30-Tage-Challenge an! 🏁 {url} #BSKY_GP"
   },
   "milestone": {
     "toast": "Noch {count} Follower bis {nextClass}!",

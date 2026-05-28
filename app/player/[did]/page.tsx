@@ -62,8 +62,12 @@ export default async function PlayerPage({ params }: Props) {
   const gain = entry.maxMonthlyGain ?? 0;
   const status = entry.isCompleted ? t('completed') : t('racing');
   const bskyProfileUrl = `https://bsky.app/profile/${entry.handle}`;
+  const playerUrl = `${siteUrl}/player/${encodeURIComponent(did)}`;
   const shareText = encodeURIComponent(
-    `BSKY-GP 30-day follower challenge!\n\n${entry.displayName || entry.handle}: ${siteUrl}/player/${encodeURIComponent(did)}\n\n#BSKY_GP`,
+    t('blueskyShareText', {
+      name: entry.displayName || entry.handle,
+      url: playerUrl,
+    }),
   );
 
   return (
