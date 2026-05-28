@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
+
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { getLatestEntryForDid, getSnapshotsAsc } from '@/src/lib/player';
@@ -90,13 +90,13 @@ export default async function PlayerPage({ params }: Props) {
           <div className="glass glass-hover p-6">
             <div className="flex items-start gap-5">
               {entry.avatar ? (
-                <Image
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
                   src={`/api/avatar-proxy?url=${encodeURIComponent(entry.avatar)}`}
                   alt={entry.displayName ?? entry.handle}
                   width={88}
                   height={88}
                   className="rounded-full ring-2 ring-sky-500/30 flex-shrink-0"
-                  unoptimized
                 />
               ) : (
                 <div className="w-22 h-22 rounded-full bg-slate-700 flex items-center justify-center text-3xl text-white flex-shrink-0 w-[88px] h-[88px]">
