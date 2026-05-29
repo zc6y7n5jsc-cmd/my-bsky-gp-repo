@@ -48,18 +48,17 @@ function calcGains(
   currentFollowers: number,
   now: Date,
 ): GainResult {
-  const todayStart = utcDayStart(now);
   const weekStart = utcWeekStart(now);
 
-  // 今日のスナップショット（新規挿入分を含む）
-  const todaySnaps = recentSnaps.filter((s) => new Date(s.capturedAt) >= todayStart);
   // 今週のスナップショット
   const weekSnaps = recentSnaps.filter((s) => new Date(s.capturedAt) >= weekStart);
 
-  // 差分 = 最後 − 最初（2件以上あるとき）
+  // 日次ゲイン = 最新スナップ − 前回スナップ
+  // Cron は1日1回のため「今日の最初〜最後」では常に0になる。
+  // 直近2件の差分（= 今日 vs 昨日）を使う。
   const dailyGain =
-    todaySnaps.length >= 2
-      ? todaySnaps.at(-1)!.followersCount - todaySnaps[0].followersCount
+    recentSnaps.length >= 2
+      ? recentSnaps.at(-1)!.followersCount - recentSnaps.at(-2)!.followersCount
       : 0;
 
   const weeklyGain =
