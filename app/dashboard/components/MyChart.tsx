@@ -55,7 +55,7 @@ export function MyChart({ snapshots, baselineFollowers }: Props) {
           </p>
         </div>
         <div className="text-right">
-          <p className="text-emerald-400 text-xl font-black">+{maxGain.toLocaleString()}</p>
+          <p className="text-gain stat-num text-xl font-black">+{maxGain.toLocaleString()}</p>
           <p className="text-slate-600 text-xs">{t('maxGain')}</p>
         </div>
       </div>

@@ -14,9 +14,9 @@ export default async function PrivacyPage() {
 
   return (
     <main className="min-h-screen pb-16">
-      <div className="sticky top-0 z-10 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-10 border-b border-white/5 bg-[#07070f]/80 backdrop-blur-xl">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Link href="/" className="text-sky-400 font-black text-lg hover:text-sky-300 transition-colors">
+          <Link href="/" className="neon-title font-black text-lg">
             BSKY-GP
           </Link>
           <span className="text-slate-700">/</span>

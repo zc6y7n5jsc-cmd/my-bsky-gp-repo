@@ -38,7 +38,7 @@ function RankCard({ label, rank }: RankChip) {
   return (
     <div className="flex flex-col items-center justify-center p-4">
       <p className="text-slate-500 text-xs mb-1">{label}</p>
-      <p className="text-amber-300 text-4xl font-black leading-tight">
+      <p className="stat-num text-amber-300 text-4xl font-black leading-tight" style={{ textShadow: '0 0 18px rgba(251,191,36,.4)' }}>
         {rank != null ? `${medal}#${rank}` : '--'}
       </p>
     </div>
@@ -100,9 +100,9 @@ export default async function DashboardPage() {
         />
       )}
 
-      <div className="sticky top-0 z-10 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-10 border-b border-white/5 bg-[#07070f]/80 backdrop-blur-xl">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="text-sky-400 font-black text-lg tracking-tight hover:text-sky-300 transition-colors">
+          <Link href="/" className="neon-title font-black text-lg">
             BSKY-GP
           </Link>
           <div className="flex items-center gap-3">
@@ -153,7 +153,7 @@ export default async function DashboardPage() {
                     </div>
                     <div className="bg-white/5 rounded-xl p-3">
                       <p className="text-slate-500 text-xs mb-1">{t('monthlyGain')}</p>
-                      <AnimatedNumber value={gain} prefix="+" className="text-emerald-400 font-bold text-sm" />
+                      <AnimatedNumber value={gain} prefix="+" className="text-gain stat-num font-bold text-sm" />
                     </div>
                   </div>
                 </div>

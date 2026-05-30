@@ -1,39 +1,161 @@
 @import "tailwindcss";
 
+/* ════════════════════════════════════════════════════════════════
+   BSKY-GP — Gamification Design System ("Arena")
+   Deep-space arena · neon tiers · HUD chrome · Bluesky-blue energy
+   ════════════════════════════════════════════════════════════════ */
+
 :root {
-  --background: #020617;
-  --foreground: #f8fafc;
-  --glass-bg: rgba(255, 255, 255, 0.04);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-hover: rgba(255, 255, 255, 0.07);
+  /* Surfaces */
+  --arena:        #07070f;   /* page void */
+  --arena-2:      #0b0b18;
+  --surface:      #12121f;
+  --surface-2:    #181830;
+
+  /* Text */
+  --background:   #07070f;
+  --foreground:   #f4f6ff;
+  --muted:        #98a2c4;
+
+  /* Neon accents */
+  --neon-violet:  #8b5cf6;
+  --neon-purple:  #7c3aed;
+  --neon-cyan:    #22d3ee;
+  --neon-sky:     #38bdf8;   /* Bluesky energy */
+  --neon-rose:    #fb3b6f;   /* heat / gains */
+  --neon-lime:    #a3e635;
+  --gold:         #fbbf24;
+
+  /* Glass / HUD */
+  --glass-bg:     rgba(20, 22, 44, 0.55);
+  --glass-border: rgba(139, 122, 246, 0.16);
+  --glass-hover:  rgba(28, 30, 60, 0.7);
+
+  --hud-glow:     rgba(124, 58, 237, 0.22);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans:    var(--font-geist-sans);
+  --font-mono:    var(--font-chakra), var(--font-geist-mono);
+  --font-display: var(--font-display), var(--font-geist-sans);
 }
 
 body {
-  background: var(--background);
+  background: var(--arena);
   color: var(--foreground);
-  font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif);
+  font-family: var(--font-geist-sans, system-ui, sans-serif);
 }
 
-/* ─── Glassmorphism ─────────────────────────────────────────────── */
+/* ─── Arena background ────────────────────────────────────────────
+   Deep gradient + neon corner glows + subtle tech grid.
+   Rendered once, fixed, behind everything. */
+.arena-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background:
+    radial-gradient(900px 600px at 15% -5%, rgba(124, 58, 237, 0.18), transparent 60%),
+    radial-gradient(800px 600px at 90% 0%, rgba(56, 189, 248, 0.14), transparent 55%),
+    radial-gradient(700px 700px at 50% 110%, rgba(251, 59, 111, 0.10), transparent 60%),
+    var(--arena);
+}
+.arena-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(139, 122, 246, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 122, 246, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(circle at 50% 30%, #000 0%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at 50% 30%, #000 0%, transparent 80%);
+}
+
+/* ─── Glass / HUD card ────────────────────────────────────────────
+   Frosted panel with a luminous gradient hairline border. */
 .glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(16px) saturate(1.5);
-  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0)) ,
+    var(--glass-bg);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
+    0 18px 40px -24px rgba(0, 0, 0, 0.9);
 }
 
-.glass-hover:hover {
-  background: var(--glass-hover);
-  border-color: rgba(255, 255, 255, 0.14);
+.glass-hover {
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
+.glass-hover:hover {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0)),
+    var(--glass-hover);
+  border-color: rgba(139, 122, 246, 0.4);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.07) inset,
+    0 0 0 1px rgba(139, 122, 246, 0.12),
+    0 24px 50px -28px rgba(124, 58, 237, 0.5);
+}
+
+/* HUD clipped-corner variant for "screen" panels */
+.hud {
+  clip-path: polygon(
+    0 14px, 14px 0,
+    calc(100% - 14px) 0, 100% 14px,
+    100% calc(100% - 14px), calc(100% - 14px) 100%,
+    14px 100%, 0 calc(100% - 14px)
+  );
+}
+
+/* ─── Neon text / accents ─────────────────────────────────────────── */
+.neon-title {
+  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
+  background: linear-gradient(100deg, var(--neon-sky), var(--neon-violet) 45%, var(--neon-rose));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 22px rgba(124, 58, 237, 0.35));
+  letter-spacing: -0.01em;
+}
+
+.neon-ring  { box-shadow: 0 0 0 1px rgba(139,122,246,.35), 0 0 22px -4px rgba(124,58,237,.6); }
+.text-gain  { color: var(--neon-rose); text-shadow: 0 0 16px rgba(251, 59, 111, 0.45); }
+
+/* Numeric stats — techy mono display */
+.stat-num {
+  font-family: var(--font-chakra), var(--font-geist-mono), monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* ─── Arena button (primary CTA) ─────────────────────────────────── */
+.btn-arena {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(100deg, var(--neon-purple), var(--neon-sky));
+  border-radius: 9999px;
+  box-shadow: 0 8px 30px -8px rgba(124, 58, 237, 0.7), 0 0 0 1px rgba(255,255,255,0.08) inset;
+  transition: transform 0.12s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+.btn-arena:hover  { filter: brightness(1.08); box-shadow: 0 12px 38px -8px rgba(56, 189, 248, 0.8), 0 0 0 1px rgba(255,255,255,0.12) inset; }
+.btn-arena:active { transform: scale(0.96); }
+
+/* ─── Podium tiers (rank 1-3) ────────────────────────────────────── */
+.rank-1 { background: linear-gradient(100deg, rgba(251,191,36,.16), rgba(251,191,36,.04)); border: 1px solid rgba(251,191,36,.35); }
+.rank-2 { background: linear-gradient(100deg, rgba(203,213,225,.14), rgba(203,213,225,.03)); border: 1px solid rgba(203,213,225,.3); }
+.rank-3 { background: linear-gradient(100deg, rgba(217,119,87,.16), rgba(217,119,87,.04)); border: 1px solid rgba(217,119,87,.32); }
+.rank-1:hover { box-shadow: 0 0 26px -4px rgba(251,191,36,.5); }
 
 /* ─── Animations ─────────────────────────────────────────────────── */
 @keyframes fadeInUp {
@@ -56,19 +178,14 @@ body {
   to   { opacity: 1; transform: scale(1); }
 }
 
-.animate-badge-pulse {
-  animation: badgePulse 2.4s ease-in-out infinite;
-}
-
-.animate-count-up {
-  animation: countUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
+.animate-badge-pulse { animation: badgePulse 2.4s ease-in-out infinite; }
+.animate-count-up    { animation: countUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────── */
-::-webkit-scrollbar        { width: 4px; height: 4px; }
+::-webkit-scrollbar        { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track  { background: transparent; }
-::-webkit-scrollbar-thumb  { background: rgba(255,255,255,0.12); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.22); }
+::-webkit-scrollbar-thumb  { background: rgba(139, 122, 246, 0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(139, 122, 246, 0.5); }
 
 @keyframes confettiFall {
   0%   { transform: translateY(-20px) translateX(0) rotate(0deg);      opacity: 1; }
@@ -80,19 +197,18 @@ body {
   50%       { transform: translateY(-6px) rotate(3deg); }
 }
 
-.animate-medal-float {
-  animation: medalFloat 3s ease-in-out infinite;
-}
+.animate-medal-float { animation: medalFloat 3s ease-in-out infinite; }
 
-.champion-card-glow:hover {
-  box-shadow: 0 0 28px 4px rgba(251, 191, 36, 0.18);
-}
+.champion-card-glow:hover { box-shadow: 0 0 34px 4px rgba(251, 191, 36, 0.28); }
 
-/* ─── Race stripe accent ─────────────────────────────────────────── */
+/* ─── Race / energy stripe accent ────────────────────────────────── */
 .race-stripe {
-  background: repeating-linear-gradient(
-    90deg,
-    #1e293b 0px, #1e293b 16px,
-    #0f172a 16px, #0f172a 32px
-  );
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-violet), var(--neon-sky), var(--neon-rose), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .race-stripe, .animate-medal-float, .animate-badge-pulse, .animate-count-up { animation: none !important; }
 }

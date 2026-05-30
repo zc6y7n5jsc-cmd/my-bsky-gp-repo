@@ -33,9 +33,9 @@ export default async function RankingsPage() {
   return (
     <main className="min-h-screen pb-16">
       {/* Nav */}
-      <div className="sticky top-0 z-10 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-10 border-b border-white/5 bg-[#07070f]/80 backdrop-blur-xl">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Link href="/" className="text-sky-400 font-black text-lg hover:text-sky-300 transition-colors">
+          <Link href="/" className="neon-title font-black text-lg">
             BSKY-GP
           </Link>
           <span className="text-slate-700">/</span>
@@ -80,7 +80,9 @@ export default async function RankingsPage() {
                 {rankings.map((row) => (
                   <tr
                     key={row.did}
-                    className="border-b border-white/5 last:border-0 hover:bg-white/3 transition-colors"
+                    className={`border-b border-white/5 last:border-0 transition-colors ${
+                      row.rank <= 3 ? `rank-${row.rank}` : 'hover:bg-white/3'
+                    }`}
                   >
                     {/* Rank */}
                     <td className="px-4 py-3 text-center">
@@ -128,7 +130,7 @@ export default async function RankingsPage() {
 
                     {/* Gain */}
                     <td className="px-4 py-3 text-right">
-                      <span className="text-emerald-400 font-bold font-mono">
+                      <span className="text-gain stat-num font-bold">
                         +{row.gain.toLocaleString()}
                       </span>
                     </td>

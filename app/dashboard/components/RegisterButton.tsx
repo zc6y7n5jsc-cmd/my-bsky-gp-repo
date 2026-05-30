@@ -37,7 +37,7 @@ export function RegisterButton() {
       <button
         onClick={handleRegister}
         disabled={loading}
-        className="inline-flex items-center gap-2 px-6 py-3 bg-sky-500 hover:bg-sky-400 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold rounded-full transition-all text-sm"
+        className="btn-arena px-6 py-3 text-sm disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {loading ? (
           <>

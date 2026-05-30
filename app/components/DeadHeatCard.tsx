@@ -118,8 +118,8 @@ export function DeadHeatCard({ initialData }: Props) {
 
 function PlayerRow({ row, highlight = false }: { row: DeadHeatResult['first']; highlight?: boolean }) {
   return (
-    <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${highlight ? 'bg-sky-500/8 border border-sky-500/15' : 'bg-white/3'}`}>
-      <span className="text-slate-500 text-xs font-mono w-5 text-right flex-shrink-0">
+    <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${highlight ? 'bg-rose-500/10 border border-rose-500/25' : 'bg-white/3'}`}>
+      <span className="text-slate-500 text-xs stat-num w-5 text-right flex-shrink-0">
         #{row.rank}
       </span>
       {row.avatar ? (
@@ -142,7 +142,7 @@ function PlayerRow({ row, highlight = false }: { row: DeadHeatResult['first']; h
         <p className="text-slate-500 text-xs">@{row.handle}</p>
       </div>
       <div className="text-right flex-shrink-0">
-        <p className="text-emerald-400 text-sm font-bold">+{row.gain.toLocaleString()}</p>
+        <p className="text-gain stat-num text-sm font-bold">+{row.gain.toLocaleString()}</p>
       </div>
     </div>
   );

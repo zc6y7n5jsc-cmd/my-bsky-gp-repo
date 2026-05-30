@@ -90,9 +90,9 @@ export default async function PlayerPage({ params }: Props) {
 
   return (
     <main className="min-h-screen">
-      <div className="sticky top-0 z-10 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-10 border-b border-white/5 bg-[#07070f]/80 backdrop-blur-xl">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Link href="/" className="text-sky-400 font-black text-lg hover:text-sky-300 transition-colors">
+          <Link href="/" className="neon-title font-black text-lg">
             BSKY-GP
           </Link>
           <span className="text-slate-700">/</span>
@@ -155,7 +155,7 @@ export default async function PlayerPage({ params }: Props) {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
               <div className="bg-white/5 rounded-xl p-3 text-center">
                 <p className="text-slate-500 text-xs mb-1">{t('overallRank')}</p>
-                <p className="text-amber-300 font-black text-xl">
+                <p className="text-amber-300 stat-num font-black text-xl">
                   {overallRank != null
                     ? `${RANK_MEDAL[overallRank] ?? ''}#${overallRank}`
                     : '--'}
@@ -163,17 +163,17 @@ export default async function PlayerPage({ params }: Props) {
               </div>
               <div className="bg-white/5 rounded-xl p-3 text-center">
                 <p className="text-slate-500 text-xs mb-1">{t('monthlyGain')}</p>
-                <p className="text-emerald-400 font-black text-xl">+{gain.toLocaleString()}</p>
+                <p className="text-gain stat-num font-black text-xl">+{gain.toLocaleString()}</p>
               </div>
               <div className="bg-white/5 rounded-xl p-3 text-center">
                 <p className="text-slate-500 text-xs mb-1">{t('currentFollowers')}</p>
-                <p className="text-white font-bold text-xl">
+                <p className="text-white stat-num font-bold text-xl">
                   {(entry.currentFollowers ?? entry.baselineFollowers).toLocaleString()}
                 </p>
               </div>
               <div className="bg-white/5 rounded-xl p-3 text-center">
                 <p className="text-slate-500 text-xs mb-1">{t('season')}</p>
-                <p className="text-white font-bold text-xl">S{entry.season}</p>
+                <p className="text-white stat-num font-bold text-xl">S{entry.season}</p>
               </div>
             </div>
           </div>

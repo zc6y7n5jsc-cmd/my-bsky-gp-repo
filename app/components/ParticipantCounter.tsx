@@ -59,7 +59,8 @@ export function ParticipantCounter({ initialCount }: Props) {
         <>
           <p
             key={count}
-            className="text-5xl font-black text-white tracking-tight animate-count-up"
+            className="stat-num text-5xl font-black text-white animate-count-up"
+            style={{ textShadow: '0 0 24px rgba(56,189,248,.4)' }}
           >
             {displayed.toLocaleString()}
           </p>

@@ -22,18 +22,18 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-slate-950">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center">
           <Link href="/" className="inline-block">
-            <h1 className="text-4xl font-black tracking-tight bg-gradient-to-r from-blue-400 via-sky-300 to-amber-400 bg-clip-text text-transparent">
+            <h1 className="neon-title text-4xl font-black uppercase">
               BSKY-GP
             </h1>
           </Link>
-          <p className="mt-2 text-slate-400 text-sm">Bluesky Grand Prix</p>
+          <p className="mt-2 text-slate-400 text-sm tracking-[0.15em] uppercase">Bluesky Grand Prix</p>
         </div>
 
-        <div className="bg-slate-900/80 backdrop-blur border border-slate-700/50 rounded-2xl p-8 space-y-6">
+        <div className="glass p-8 space-y-6">
           <div>
             <h2 className="text-xl font-semibold text-white">{t('heading')}</h2>
             <p className="mt-1 text-slate-400 text-sm">{t('description')}</p>
@@ -70,7 +70,7 @@ function LoginForm() {
             <button
               type="submit"
               disabled={submitting || !handle.trim()}
-              className="w-full py-2.5 px-4 bg-sky-500 hover:bg-sky-400 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors text-sm"
+              className="btn-arena w-full py-2.5 px-4 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? t('submitting') : t('submitButton')}
             </button>
@@ -97,7 +97,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-950" />}>
+    <Suspense fallback={<div className="min-h-screen" />}>
       <LoginForm />
     </Suspense>
   );

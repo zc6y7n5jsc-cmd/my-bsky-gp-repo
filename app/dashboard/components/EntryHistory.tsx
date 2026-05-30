@@ -47,7 +47,7 @@ export async function EntryHistory({ entries, activeEntryId }: Props) {
                 <span className="text-red-400 text-xs font-medium">BAN</span>
               ) : entry.isCompleted ? (
                 <div className="text-right">
-                  <p className="text-emerald-400 text-sm font-bold">+{gain.toLocaleString()}</p>
+                  <p className="text-gain stat-num text-sm font-bold">+{gain.toLocaleString()}</p>
                   <p className="text-slate-600 text-xs">{t('monthlyGain')}</p>
                 </div>
               ) : (
