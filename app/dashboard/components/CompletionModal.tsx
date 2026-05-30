@@ -123,7 +123,7 @@ export function CompletionModal({ entryId, gain, rank, cls }: Props) {
               <AnimatedNumber
                 value={gain}
                 prefix="+"
-                className="text-emerald-400 font-black text-3xl"
+                className="text-gain stat-num font-black text-3xl"
               />
             </div>
 
@@ -132,7 +132,7 @@ export function CompletionModal({ entryId, gain, rank, cls }: Props) {
               style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)' }}
             >
               <p className="text-slate-500 text-xs mb-1 tracking-widest uppercase">{t('finalRank')}</p>
-              <p className="text-amber-300 font-black text-3xl">
+              <p className="text-amber-300 stat-num font-black text-3xl">
                 {rank != null ? `${medal}#${rank}` : '--'}
               </p>
             </div>
@@ -143,7 +143,7 @@ export function CompletionModal({ entryId, gain, rank, cls }: Props) {
           <div className="flex flex-col gap-3">
             <a
               href="/api/entries/register"
-              className="flex items-center justify-center gap-2 w-full py-3 rounded-full font-bold text-sm bg-sky-500 hover:bg-sky-400 text-white transition-all"
+              className="btn-arena w-full py-3 text-sm"
             >
               🚀 {t('retryButton')}
             </a>

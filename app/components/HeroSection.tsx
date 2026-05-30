@@ -14,17 +14,21 @@ export function HeroSection() {
     <section className="relative overflow-hidden pt-20 pb-12 px-4 text-center">
       {/* Background glow */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-sky-500/10 blur-3xl" />
-        <div className="absolute top-20 left-1/4 w-64 h-64 rounded-full bg-violet-500/8 blur-3xl" />
-        <div className="absolute top-20 right-1/4 w-64 h-64 rounded-full bg-amber-500/8 blur-3xl" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-violet-600/15 blur-3xl" />
+        <div className="absolute top-20 left-1/4 w-64 h-64 rounded-full bg-sky-500/12 blur-3xl" />
+        <div className="absolute top-20 right-1/4 w-64 h-64 rounded-full bg-rose-500/10 blur-3xl" />
       </div>
 
       {/* Logo */}
       <div className="mb-6">
-        <h1 className="text-7xl sm:text-8xl font-black tracking-tighter bg-gradient-to-r from-sky-400 via-blue-300 to-amber-400 bg-clip-text text-transparent leading-none">
+        <span className="inline-flex items-center gap-2 mb-4 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] text-sky-300 bg-sky-500/10 border border-sky-500/25">
+          <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
+          Bluesky Grand Prix
+        </span>
+        <h1 className="neon-title text-7xl sm:text-8xl font-black uppercase leading-none">
           {t('title')}
         </h1>
-        <p className="text-slate-400 text-lg mt-2 font-medium tracking-wide">
+        <p className="text-slate-400 text-lg mt-3 font-medium tracking-[0.15em] uppercase">
           {t('subtitle')}
         </p>
       </div>
@@ -41,14 +45,14 @@ export function HeroSection() {
         </div>
       ) : user ? (
         <div className="flex flex-col items-center gap-4">
-          <div className="flex items-center gap-3 glass px-4 py-3 rounded-2xl">
+          <div className="flex items-center gap-3 glass px-4 py-3 rounded-2xl neon-ring">
             {user.avatar && (
               <Image
                 src={user.avatar}
                 alt={user.displayName ?? user.handle}
                 width={36}
                 height={36}
-                className="rounded-full ring-2 ring-sky-500/40"
+                className="rounded-full ring-2 ring-sky-400/50"
               />
             )}
             <div className="text-left">
@@ -59,13 +63,13 @@ export function HeroSection() {
           <div className="flex gap-3">
             <Link
               href="/dashboard"
-              className="px-6 py-2.5 bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-semibold rounded-full transition-all text-sm"
+              className="btn-arena px-6 py-2.5 text-sm"
             >
               {t('goToMyPage')}
             </Link>
             <button
               onClick={logout}
-              className="px-6 py-2.5 border border-slate-600 hover:border-slate-400 text-slate-400 hover:text-white font-semibold rounded-full transition-all active:scale-95 text-sm"
+              className="px-6 py-2.5 border border-slate-600 hover:border-rose-400/60 text-slate-400 hover:text-white font-semibold rounded-full transition-all active:scale-95 text-sm"
             >
               {tc('logout')}
             </button>
@@ -74,15 +78,15 @@ export function HeroSection() {
       ) : (
         <Link
           href="/login"
-          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-sky-500 hover:bg-sky-400 active:scale-95 text-white font-bold text-base shadow-lg shadow-sky-500/20 transition-all hover:shadow-sky-400/30 hover:shadow-xl"
+          className="btn-arena px-8 py-3.5 text-base"
         >
           <span>🏁</span>
           {t('joinButton')}
         </Link>
       )}
 
-      {/* Decorative race stripe */}
-      <div className="mt-14 h-px race-stripe opacity-30" />
+      {/* Decorative energy stripe */}
+      <div className="mt-14 race-stripe max-w-2xl mx-auto opacity-70" />
     </section>
   );
 }

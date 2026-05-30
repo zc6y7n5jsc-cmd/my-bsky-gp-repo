@@ -67,12 +67,15 @@ export default async function HallOfFamePage({ searchParams }: Props) {
         </div>
 
         <div className="text-6xl mb-4 animate-medal-float inline-block">🏆</div>
-        <h1 className="text-4xl sm:text-5xl font-black tracking-tighter bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent leading-none mb-3">
+        <h1
+          className="text-4xl sm:text-6xl font-black uppercase tracking-tight bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent leading-none mb-3"
+          style={{ fontFamily: 'var(--font-display), var(--font-geist-sans), sans-serif', filter: 'drop-shadow(0 0 22px rgba(251,191,36,.35))' }}
+        >
           {t('title')}
         </h1>
-        <p className="text-slate-400 text-base font-medium">{t('subtitle')}</p>
+        <p className="text-slate-400 text-base font-medium tracking-[0.15em] uppercase">{t('subtitle')}</p>
 
-        <div className="mt-8 h-px race-stripe opacity-20" />
+        <div className="mt-8 race-stripe max-w-md mx-auto opacity-60" />
       </section>
 
       <div className="max-w-5xl mx-auto px-4 space-y-6">

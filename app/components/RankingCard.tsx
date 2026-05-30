@@ -73,9 +73,9 @@ export function RankingCard({ initialData }: Props) {
             <button
               key={tab.value}
               onClick={() => setClassFilter(tab.value)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
                 classFilter === tab.value
-                  ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40'
+                  ? 'bg-violet-500/20 text-violet-200 border border-violet-400/40 neon-ring'
                   : 'text-slate-500 hover:text-slate-300'
               }`}
             >
@@ -87,14 +87,14 @@ export function RankingCard({ initialData }: Props) {
 
       {/* Period tabs */}
       <div className="px-4 pb-3">
-        <div className="flex gap-1 bg-slate-800/50 rounded-lg p-1 w-fit">
+        <div className="flex gap-1 bg-slate-900/60 rounded-lg p-1 w-fit border border-white/5">
           {periodTabs.map((tab) => (
             <button
               key={tab.value}
               onClick={() => setPeriod(tab.value)}
-              className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${
+              className={`px-3 py-1 rounded-md text-xs font-semibold transition-all ${
                 period === tab.value
-                  ? 'bg-slate-600 text-white shadow-sm'
+                  ? 'bg-gradient-to-r from-violet-600 to-sky-500 text-white shadow-sm'
                   : 'text-slate-500 hover:text-slate-300'
               }`}
             >
@@ -108,7 +108,7 @@ export function RankingCard({ initialData }: Props) {
       <div className="flex-1 overflow-y-auto px-3 pb-4 space-y-1 max-h-[480px]">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="w-5 h-5 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-5 h-5 border-2 border-violet-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : data.rankings.length === 0 ? (
           <div className="text-center py-12 text-slate-500 text-sm">
@@ -118,8 +118,8 @@ export function RankingCard({ initialData }: Props) {
           data.rankings.map((row) => (
             <div
               key={row.did}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-white/5 ${
-                row.rank <= 3 ? 'bg-amber-500/5 border border-amber-500/10' : ''
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all hover:bg-white/5 ${
+                row.rank <= 3 ? `rank-${row.rank}` : ''
               }`}
             >
               {/* Rank */}
@@ -127,7 +127,7 @@ export function RankingCard({ initialData }: Props) {
                 {RANK_MEDALS[row.rank] ? (
                   <span className="text-lg">{RANK_MEDALS[row.rank]}</span>
                 ) : (
-                  <span className="text-slate-500 text-sm font-mono">{row.rank}</span>
+                  <span className="text-slate-500 text-sm stat-num">{row.rank}</span>
                 )}
               </div>
 
@@ -161,7 +161,7 @@ export function RankingCard({ initialData }: Props) {
 
               {/* Gain */}
               <div className="text-right flex-shrink-0 ml-1">
-                <p className="text-emerald-400 text-sm font-bold">
+                <p className="text-gain stat-num text-sm font-bold">
                   +{row.gain.toLocaleString()}
                 </p>
               </div>

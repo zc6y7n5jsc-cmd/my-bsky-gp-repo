@@ -21,7 +21,7 @@ function calcRemaining(endsAt: string) {
 function Digit({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center">
-      <div className="glass w-16 h-16 flex items-center justify-center text-2xl font-black text-white tabular-nums rounded-2xl">
+      <div className="glass w-16 h-16 flex items-center justify-center text-2xl font-black text-white stat-num rounded-2xl neon-ring">
         {String(value).padStart(2, '0')}
       </div>
       <span className="text-slate-600 text-xs mt-1">{label}</span>
