@@ -1,5 +1,5 @@
-import { pgTable, serial, text, integer, boolean, timestamp } from 'drizzle-orm/pg-core';
-import { type InferSelectModel } from 'drizzle-orm';
+import { pgTable, serial, text, integer, boolean, timestamp, index, uniqueIndex } from 'drizzle-orm/pg-core';
+import { type InferSelectModel, sql } from 'drizzle-orm';
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 
@@ -24,14 +24,30 @@ export const entries = pgTable('entries', {
   isFlagged: boolean('is_flagged').notNull().default(false),
   isBanned: boolean('is_banned').notNull().default(false),
   season: integer('season').notNull(),
-});
+}, (table) => [
+  // 1 DID につき同時に進行できる挑戦は 1 つだけ（参加登録の重複防止）。
+  // 部分ユニーク: is_completed = false の行のみ対象。
+  uniqueIndex('entries_did_active_idx').on(table.did).where(sql`${table.isCompleted} = false`),
+  // 履歴・最新エントリー取得（did で絞り込み）。
+  index('entries_did_idx').on(table.did),
+  // ランキングのソート/絞り込み（is_banned で除外 → gain DESC, handle ASC）。
+  index('entries_daily_rank_idx').on(table.maxDailyGain, table.handle),
+  index('entries_weekly_rank_idx').on(table.maxWeeklyGain, table.handle),
+  index('entries_monthly_rank_idx').on(table.maxMonthlyGain, table.handle),
+  index('entries_class_idx').on(table.class),
+  // Cron バッチ取得（active かつ未記録）。
+  index('entries_cron_idx').on(table.isCompleted, table.isBanned, table.lastSnapshotAt),
+]);
 
 export const snapshots = pgTable('snapshots', {
   id: serial('id').primaryKey(),
   entryId: integer('entry_id').notNull(),
   followersCount: integer('followers_count').notNull(),
   capturedAt: timestamp('captured_at').notNull(),
-});
+}, (table) => [
+  // entryId での絞り込み + capturedAt 順の取得が頻発する。
+  index('snapshots_entry_captured_idx').on(table.entryId, table.capturedAt),
+]);
 
 export const oauthStates = pgTable('oauth_states', {
   key: text('key').primaryKey(),
@@ -79,6 +95,9 @@ export function getDb(): DbClient {
 
 export const db = new Proxy({} as DbClient, {
   get(_target, prop) {
-    return Reflect.get(getDb(), prop);
+    const real = getDb();
+    const value = Reflect.get(real, prop, real);
+    // メソッドは実 DB インスタンスに束縛して返す（this が Proxy になる事故を防ぐ）。
+    return typeof value === 'function' ? value.bind(real) : value;
   },
 });

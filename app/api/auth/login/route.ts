@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createOAuthClient } from '@/src/lib/oauth/client';
 import { getSessionDid } from '@/src/lib/session';
+import { checkRateLimit } from '@/src/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
 export async function GET(req: NextRequest) {
+  const limited = checkRateLimit(req, { name: 'auth-login', limit: 10, windowMs: 60_000 });
+  if (limited) return limited;
+
   // すでにログイン済みならホームへ
   const existingDid = await getSessionDid();
   if (existingDid) {

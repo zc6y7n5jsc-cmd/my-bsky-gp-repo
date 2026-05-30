@@ -63,11 +63,18 @@ export async function registerEntry(
     .returning();
 
   // 初回スナップショット（= baseline）を記録
-  await db.insert(snapshots).values({
-    entryId: entry.id,
-    followersCount,
-    capturedAt: now,
-  });
+  // neon-http はトランザクション非対応のため、失敗時は entry を補償削除して
+  // 「baseline スナップショットのない孤立 entry」が残らないようにする。
+  try {
+    await db.insert(snapshots).values({
+      entryId: entry.id,
+      followersCount,
+      capturedAt: now,
+    });
+  } catch (err) {
+    await db.delete(entries).where(eq(entries.id, entry.id)).catch(() => {});
+    throw err;
+  }
 
   return entry;
 }

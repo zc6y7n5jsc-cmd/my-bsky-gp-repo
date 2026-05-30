@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 /**
@@ -9,8 +9,13 @@ import { useRouter } from 'next/navigation';
  */
 export function AutoSync({ did }: { did: string }) {
   const router = useRouter();
+  const didSync = useRef(false);
 
   useEffect(() => {
+    // StrictMode の二重マウントや再レンダリングでの多重 POST を防ぐ
+    if (didSync.current) return;
+    didSync.current = true;
+
     async function sync() {
       try {
         const res = await fetch(`/api/entries/${encodeURIComponent(did)}/sync`, {

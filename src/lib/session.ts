@@ -15,6 +15,7 @@ function sign(value: string): string {
   return `${value}.${sig}`;
 }
 
+/** HMAC を検証して署名付きペイロードを返す（不正なら null） */
 function unsign(signed: string): string | null {
   const idx = signed.lastIndexOf('.');
   if (idx === -1) return null;
@@ -36,12 +37,27 @@ export async function getSessionDid(): Promise<string | null> {
   const store = await cookies();
   const cookie = store.get(COOKIE_NAME);
   if (!cookie?.value) return null;
-  return unsign(cookie.value);
+
+  const payload = unsign(cookie.value);
+  if (!payload) return null;
+
+  // ペイロード形式: `<did>|<expiryEpochSeconds>`
+  // 旧形式（DID のみ・期限なし）は失効扱いにして再ログインを促す。
+  const sep = payload.lastIndexOf('|');
+  if (sep === -1) return null;
+
+  const did = payload.slice(0, sep);
+  const exp = Number(payload.slice(sep + 1));
+  if (!did || !Number.isFinite(exp)) return null;
+  if (Date.now() / 1000 >= exp) return null; // 期限切れ
+
+  return did;
 }
 
 export async function setSessionDid(did: string): Promise<void> {
   const store = await cookies();
-  store.set(COOKIE_NAME, sign(did), {
+  const exp = Math.floor(Date.now() / 1000) + COOKIE_MAX_AGE;
+  store.set(COOKIE_NAME, sign(`${did}|${exp}`), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',

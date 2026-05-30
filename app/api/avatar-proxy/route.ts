@@ -35,8 +35,23 @@ export async function GET(request: NextRequest) {
       return new NextResponse('Upstream error', { status: 502 });
     }
 
+    // 画像以外（HTML 等）をプロキシしない
     const contentType = upstream.headers.get('content-type') ?? 'image/jpeg';
+    if (!contentType.startsWith('image/')) {
+      return new NextResponse('Not an image', { status: 415 });
+    }
+
+    // サイズ上限 5MB（アバター画像としては十分。巨大レスポンスでのメモリ枯渇対策）
+    const MAX_BYTES = 5 * 1024 * 1024;
+    const declared = Number(upstream.headers.get('content-length') ?? '');
+    if (Number.isFinite(declared) && declared > MAX_BYTES) {
+      return new NextResponse('Image too large', { status: 413 });
+    }
+
     const body = await upstream.arrayBuffer();
+    if (body.byteLength > MAX_BYTES) {
+      return new NextResponse('Image too large', { status: 413 });
+    }
 
     return new NextResponse(body, {
       headers: {

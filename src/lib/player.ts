@@ -27,14 +27,20 @@ export async function getLatestEntryForDid(did: string): Promise<Entry | null> {
   return rows[0] ?? null;
 }
 
-/** エントリーのスナップショットを古い順で返す（グラフ用）*/
+/**
+ * エントリーの「直近 limit 件」のスナップショットを古い順で返す（グラフ用）。
+ *
+ * DESC + LIMIT で最新側を取得してから昇順へ並べ替える。
+ * （ASC + LIMIT だと最古の limit 件になり、最新日が欠落する）
+ */
 export async function getSnapshotsAsc(entryId: number, limit = 30): Promise<Snapshot[]> {
-  return db
+  const rows = await db
     .select()
     .from(snapshots)
     .where(eq(snapshots.entryId, entryId))
-    .orderBy(asc(snapshots.capturedAt))
+    .orderBy(desc(snapshots.capturedAt))
     .limit(limit);
+  return rows.reverse();
 }
 
 /**

@@ -7,6 +7,7 @@ import {
   recordSnapshot,
   getRecentSnapshots,
 } from '@/src/lib/snapshot';
+import { checkRateLimit } from '@/src/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
@@ -19,6 +20,9 @@ export async function POST(
   if (!sessionDid) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+
+  const limited = checkRateLimit(req, { name: 'sync', limit: 30, windowMs: 60_000, key: sessionDid });
+  if (limited) return limited;
 
   // 2. URL パラメーターの DID がセッション DID と一致するか確認
   //    （自分のデータのみ同期可能）

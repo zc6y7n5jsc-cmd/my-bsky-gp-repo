@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionDid } from '@/src/lib/session';
 import { getRankAroundUser, isValidPeriod, isValidClass } from '@/src/lib/rankings';
+import { checkRateLimit } from '@/src/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
@@ -8,6 +9,9 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ did: string }> },
 ) {
+  const limited = checkRateLimit(req, { name: 'rankings-around', limit: 60, windowMs: 60_000 });
+  if (limited) return limited;
+
   const sessionDid = await getSessionDid();
   if (!sessionDid) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

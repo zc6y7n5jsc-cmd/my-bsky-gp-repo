@@ -50,9 +50,6 @@ function calcGains(
 ): GainResult {
   const weekStart = utcWeekStart(now);
 
-  // 今週のスナップショット
-  const weekSnaps = recentSnaps.filter((s) => new Date(s.capturedAt) >= weekStart);
-
   // 日次ゲイン = 最新スナップ − 前回スナップ
   // Cron は1日1回のため「今日の最初〜最後」では常に0になる。
   // 直近2件の差分（= 今日 vs 昨日）を使う。
@@ -61,10 +58,13 @@ function calcGains(
       ? recentSnaps.at(-1)!.followersCount - recentSnaps.at(-2)!.followersCount
       : 0;
 
-  const weeklyGain =
-    weekSnaps.length >= 2
-      ? weekSnaps.at(-1)!.followersCount - weekSnaps[0].followersCount
-      : 0;
+  // 週間ゲイン = 現在値 − 「週初め時点」のフォロワー数。
+  // 週初め直前のスナップショット（carry-in）があればそれを基準にして
+  // 週初め〜現在の増加を漏れなく数える。なければ今週最初のスナップを基準。
+  const carryIn = [...recentSnaps].reverse().find((s) => new Date(s.capturedAt) < weekStart);
+  const firstThisWeek = recentSnaps.find((s) => new Date(s.capturedAt) >= weekStart);
+  const weekBase = carryIn?.followersCount ?? firstThisWeek?.followersCount ?? currentFollowers;
+  const weeklyGain = currentFollowers - weekBase;
 
   // 月間ゲイン = 現在値 − 登録時 baseline
   const monthlyGain = Math.max(0, currentFollowers - baselineFollowers);

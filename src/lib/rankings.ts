@@ -26,7 +26,7 @@ export interface RankingRow {
 
 export interface RankingsResult {
   rankings: RankingRow[];
-  /** is_banned/is_flagged を除いた有効エントリーの総数 */
+  /** is_banned を除いた有効エントリーの総数（is_flagged は除外しない） */
   total: number;
   page: number;
   pageSize: number;
@@ -83,11 +83,17 @@ function entryGain(entry: Entry, period: RankingPeriod): number {
   }
 }
 
-/** is_banned / is_flagged を除外する基本 WHERE 句を構築 */
+/**
+ * is_banned を除外する基本 WHERE 句を構築。
+ *
+ * is_flagged（異常検知の自動フラグ）は除外しない。
+ * z-score ベースのヒューリスティックは正当なバズを誤検知し得るため、
+ * フラグは管理者レビュー用のシグナルに留め、確定的な不正は管理者が
+ * is_banned を立てて初めてランキングから除外する。
+ */
 function buildBaseWhere(classFilter: RankingClass) {
   const conditions = [
     eq(entries.isBanned, false),
-    eq(entries.isFlagged, false),
   ] as const;
 
   if (classFilter === 'all') {
@@ -156,7 +162,7 @@ function toRankingRow(raw: RawRow, rank: number, period: RankingPeriod): Ranking
 
 /**
  * ランキング取得。
- * - is_banned / is_flagged = FALSE のエントリーのみ対象
+ * - is_banned = FALSE のエントリーのみ対象（is_flagged は除外しない）
  * - 完了済みエントリーも含む（歴代ランキング）
  * - 同ゲイン数は handle の辞書順でタイブレーク
  */
@@ -263,13 +269,13 @@ export async function getRankAroundUser(
 }
 
 /**
- * 参加者数（banned/flagged を除く全エントリー数）。
+ * 参加者数（banned を除く全エントリー数）。
  */
 export async function getParticipantCount(): Promise<number> {
   const [row] = await db
     .select({ count: sql<number>`count(*)::int` })
     .from(entries)
-    .where(and(eq(entries.isBanned, false), eq(entries.isFlagged, false)));
+    .where(eq(entries.isBanned, false));
   return row?.count ?? 0;
 }
 
@@ -364,6 +370,6 @@ export async function getLastUpdatedAt(): Promise<Date | null> {
   const [row] = await db
     .select({ latest: sql<Date>`max(last_snapshot_at)` })
     .from(entries)
-    .where(and(eq(entries.isBanned, false), eq(entries.isFlagged, false)));
+    .where(eq(entries.isBanned, false));
   return row?.latest ?? null;
 }

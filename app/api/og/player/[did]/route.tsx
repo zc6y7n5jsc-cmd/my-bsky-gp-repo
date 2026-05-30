@@ -2,6 +2,7 @@ import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
 import { getLatestEntryForDid } from '@/src/lib/player';
 import { getRankAroundUser } from '@/src/lib/rankings';
+import { checkRateLimit } from '@/src/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
@@ -19,9 +20,12 @@ const col: React.CSSProperties = { display: 'flex', flexDirection: 'column' };
 const row: React.CSSProperties = { display: 'flex', flexDirection: 'row', alignItems: 'center' };
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ did: string }> },
 ) {
+  const limited = checkRateLimit(req, { name: 'og-player', limit: 30, windowMs: 60_000 });
+  if (limited) return limited;
+
   try {
     const { did } = await params;
     const decoded = decodeURIComponent(did);

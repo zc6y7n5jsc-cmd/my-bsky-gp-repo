@@ -1,4 +1,4 @@
-// クラス判定閾値（環境変数で上書き可能）
+// クラス判定閾値（baseline フォロワー数でクラスを確定）
 export const CLASS_THRESHOLDS = {
   Rookie: { min: 0, max: 99 },
   Rising: { min: 100, max: 499 },

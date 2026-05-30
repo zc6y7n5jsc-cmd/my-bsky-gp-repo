@@ -1,16 +1,21 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSessionDid } from '@/src/lib/session';
 import { fetchBlueskyProfile } from '@/src/lib/bluesky';
 import { getActiveEntry, registerEntry } from '@/src/lib/entries';
+import { checkRateLimit } from '@/src/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
-export async function POST() {
+export async function POST(req: NextRequest) {
   // 1. 認証チェック
   const did = await getSessionDid();
   if (!did) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+
+  // 参加登録は Bluesky API を叩くので DID 単位で制限
+  const limited = checkRateLimit(req, { name: 'register', limit: 10, windowMs: 60_000, key: did });
+  if (limited) return limited;
 
   // 2. 既に参加中かチェック（DB 一意制約の前に先読みして 409 を返す）
   const existing = await getActiveEntry(did);

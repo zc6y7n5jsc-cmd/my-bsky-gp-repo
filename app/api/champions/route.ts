@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getChampions, getAvailableSeasons } from '@/src/lib/champions';
+import { checkRateLimit } from '@/src/lib/rate-limit';
 
 export async function GET(request: NextRequest) {
+  const limited = checkRateLimit(request, { name: 'champions', limit: 60, windowMs: 60_000 });
+  if (limited) return limited;
+
   const { searchParams } = new URL(request.url);
   const seasonParam = searchParams.get('season');
 

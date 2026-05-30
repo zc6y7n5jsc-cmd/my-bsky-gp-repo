@@ -1,5 +1,6 @@
 import { ImageResponse } from '@vercel/og';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit } from '@/src/lib/rate-limit';
 import { readFile } from 'fs/promises';
 import path from 'path';
 import { getSessionDid } from '@/src/lib/session';
@@ -87,12 +88,16 @@ async function loadFonts(): Promise<{ name: string; data: ArrayBuffer; weight: 4
   ];
 }
 
-export async function POST() {
+export async function POST(req: NextRequest) {
   try {
     const did = await getSessionDid();
     if (!did) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // 画像生成は重いので DID 単位で制限
+    const limited = checkRateLimit(req, { name: 'card-download', limit: 20, windowMs: 60_000, key: did });
+    if (limited) return limited;
 
     const entry = await getActiveEntry(did).catch(() => null);
 
