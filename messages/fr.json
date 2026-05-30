@@ -174,7 +174,11 @@
     "viewRanking": "Voir le classement",
     "chartNoData": "Aucune donnée de snapshot",
     "gainLabel": "Gain",
-    "blueskyShareText": "Découvrez le défi BSKY-GP de 30 jours de {name} ! 🏁 {url} #BSKY_GP"
+    "blueskyShareText": "Découvrez le défi BSKY-GP de 30 jours de {name} ! 🏁 {url} #BSKY_GP",
+    "shareGenerating": "Génération...",
+    "clipboardCopied": "Image copiée",
+    "clipboardHint": "📋 Image de la carte copiée ! Appuyez sur Cmd+V (Mac) ou Ctrl+V (Windows) pour la coller dans votre publication Bluesky.",
+    "clipboardFailed": "Impossible de copier l’image dans le presse-papiers. Téléchargez d’abord la carte et ajoutez-la manuellement."
   },
   "milestone": {
     "toast": "Encore {count} abonnés pour {nextClass} !",

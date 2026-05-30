@@ -174,7 +174,11 @@
     "viewRanking": "ランキングを見る",
     "chartNoData": "スナップショットデータなし",
     "gainLabel": "増加数",
-    "blueskyShareText": "{name} さんの BSKY-GP 30日間チャレンジをチェック！🏁 {url} #BSKY_GP"
+    "blueskyShareText": "{name} さんの BSKY-GP 30日間チャレンジをチェック！🏁 {url} #BSKY_GP",
+    "shareGenerating": "生成中...",
+    "clipboardCopied": "画像をコピーしました",
+    "clipboardHint": "📋 カード画像をコピーしました！投稿画面で Cmd+V（Mac）または Ctrl+V（Windows）で貼り付けてください。",
+    "clipboardFailed": "クリップボードへのコピーに失敗しました。先にカードをダウンロードして手動で添付してください。"
   },
   "milestone": {
     "toast": "{nextClass} まであと {count} 人！",

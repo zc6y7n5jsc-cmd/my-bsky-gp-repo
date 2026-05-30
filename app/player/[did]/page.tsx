@@ -4,10 +4,11 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { getLatestEntryForDid, getSnapshotsAsc } from '@/src/lib/player';
-import { getRankAroundUser } from '@/src/lib/rankings';
+import { getRankAroundUser, type RankingClass } from '@/src/lib/rankings';
 import { ClassBadge } from '@/app/components/ClassBadge';
 import { FadeInCard } from '@/app/components/FadeInCard';
 import { PlayerChart } from './components/PlayerChart';
+import { BlueskyShareButton } from './components/BlueskyShareButton';
 
 export const revalidate = 3600;
 
@@ -55,20 +56,37 @@ export default async function PlayerPage({ params }: Props) {
 
   if (!entry) notFound();
 
-  const snapshots = await getSnapshotsAsc(entry.id, 30).catch(() => []);
+  const [snapshots, classRankData] = await Promise.all([
+    getSnapshotsAsc(entry.id, 30).catch(() => []),
+    getRankAroundUser(decoded, entry.class as RankingClass, 'daily').catch(
+      () => ({ myRank: null, around: [] }),
+    ),
+  ]);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://bsky-gp.vercel.app';
   const overallRank = rankData.myRank?.rank ?? null;
+  const classRank = classRankData.myRank?.rank ?? null;
   const gain = entry.maxMonthlyGain ?? 0;
   const status = entry.isCompleted ? t('completed') : t('racing');
   const bskyProfileUrl = `https://bsky.app/profile/${entry.handle}`;
   const playerUrl = `${siteUrl}/player/${encodeURIComponent(did)}`;
-  const shareText = encodeURIComponent(
-    t('blueskyShareText', {
-      name: entry.displayName || entry.handle,
-      url: playerUrl,
-    }),
-  );
+  const shareText = t('blueskyShareText', {
+    name: entry.displayName || entry.handle,
+    url: playerUrl,
+  });
+
+  const shareCard = {
+    displayName: entry.displayName || entry.handle,
+    handle: entry.handle,
+    avatarUrl: entry.avatar ?? null,
+    cls: entry.class,
+    gain,
+    overallRank,
+    classRank,
+    snapshots: snapshots.map((s) => ({ followersCount: s.followersCount })),
+    baseline: entry.baselineFollowers,
+    isCompleted: entry.isCompleted,
+  };
 
   return (
     <main className="min-h-screen">
@@ -177,15 +195,8 @@ export default async function PlayerPage({ params }: Props) {
         <FadeInCard delay={160}>
           <div className="glass glass-hover p-5">
             <h2 className="font-bold text-white text-base mb-3">🔗 {t('shareHeading')}</h2>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href={`https://bsky.app/intent/compose?text=${shareText}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 transition-all"
-              >
-                🦋 {t('shareOnBluesky')}
-              </a>
+            <div className="flex flex-wrap items-start gap-3">
+              <BlueskyShareButton shareText={shareText} card={shareCard} />
               <Link
                 href="/"
                 className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-white/5 hover:bg-white/10 text-slate-400 hover:text-slate-200 border border-white/8 transition-all"

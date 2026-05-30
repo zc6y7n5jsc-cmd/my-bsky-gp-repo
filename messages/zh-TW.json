@@ -174,7 +174,11 @@
     "viewRanking": "查看排行榜",
     "chartNoData": "無快照資料",
     "gainLabel": "增加數",
-    "blueskyShareText": "來看看 {name} 的 BSKY-GP 30天挑戰！🏁 {url} #BSKY_GP"
+    "blueskyShareText": "來看看 {name} 的 BSKY-GP 30天挑戰！🏁 {url} #BSKY_GP",
+    "shareGenerating": "產生中...",
+    "clipboardCopied": "已複製圖片",
+    "clipboardHint": "📋 已複製卡片圖片！請在發文畫面按 Cmd+V（Mac）或 Ctrl+V（Windows）貼上。",
+    "clipboardFailed": "無法將圖片複製到剪貼簿。請先下載卡片再手動附加。"
   },
   "milestone": {
     "toast": "距離 {nextClass} 還差 {count} 位粉絲！",

@@ -174,7 +174,11 @@
     "viewRanking": "View Ranking",
     "chartNoData": "No snapshot data",
     "gainLabel": "Gain",
-    "blueskyShareText": "Check out {name}'s BSKY-GP 30-day challenge! 🏁 {url} #BSKY_GP"
+    "blueskyShareText": "Check out {name}'s BSKY-GP 30-day challenge! 🏁 {url} #BSKY_GP",
+    "shareGenerating": "Generating...",
+    "clipboardCopied": "Image copied",
+    "clipboardHint": "📋 Card image copied! Press Cmd+V (Mac) or Ctrl+V (Windows) to paste it into your Bluesky post.",
+    "clipboardFailed": "Could not copy image to clipboard. Please download the card first and attach it manually."
   },
   "milestone": {
     "toast": "{count} more followers to {nextClass}!",
