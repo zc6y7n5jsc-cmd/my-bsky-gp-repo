@@ -20,11 +20,11 @@ function calcRemaining(endsAt: string) {
 
 function Digit({ value, label }: { value: number; label: string }) {
   return (
-    <div className="flex flex-col items-center">
-      <div className="glass w-16 h-16 flex items-center justify-center text-2xl font-black text-white stat-num rounded-2xl neon-ring">
+    <div className="flex flex-col items-center flex-1 min-w-0 max-w-[3.75rem]">
+      <div className="glass w-full aspect-square flex items-center justify-center text-lg sm:text-2xl font-black text-white stat-num rounded-xl sm:rounded-2xl neon-ring">
         {String(value).padStart(2, '0')}
       </div>
-      <span className="text-slate-600 text-xs mt-1">{label}</span>
+      <span className="text-slate-600 text-[10px] sm:text-xs mt-1 truncate max-w-full">{label}</span>
     </div>
   );
 }
@@ -52,13 +52,13 @@ export function CountdownTimer({ endsAt, isCompleted }: Props) {
   return (
     <div className="glass glass-hover h-full flex flex-col items-center justify-center p-6 text-center">
       <p className="text-slate-400 text-sm font-medium mb-4">{t('countdown')}</p>
-      <div className="flex gap-3 items-end">
+      <div className="flex gap-1 sm:gap-1.5 items-start justify-center w-full max-w-xs">
         <Digit value={rem.days}  label={t('days')} />
-        <span className="text-slate-600 text-xl mb-4">:</span>
+        <span className="text-slate-600 text-lg sm:text-xl shrink-0 leading-9 sm:leading-[3.75rem]">:</span>
         <Digit value={rem.hours} label={t('hours')} />
-        <span className="text-slate-600 text-xl mb-4">:</span>
+        <span className="text-slate-600 text-lg sm:text-xl shrink-0 leading-9 sm:leading-[3.75rem]">:</span>
         <Digit value={rem.mins}  label={t('minutes')} />
-        <span className="text-slate-600 text-xl mb-4">:</span>
+        <span className="text-slate-600 text-lg sm:text-xl shrink-0 leading-9 sm:leading-[3.75rem]">:</span>
         <Digit value={rem.secs}  label={t('seconds')} />
       </div>
       <p className="text-slate-600 text-xs mt-4">
