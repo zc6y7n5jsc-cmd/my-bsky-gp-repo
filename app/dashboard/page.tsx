@@ -202,6 +202,9 @@ export default async function DashboardPage() {
                   snapshots: snapshots.map((s) => ({ followersCount: s.followersCount })),
                   baseline: entry.baselineFollowers,
                   isCompleted: entry.isCompleted,
+                  season: entry.season,
+                  startedAt: entry.startedAt.toISOString(),
+                  endsAt: entry.endsAt.toISOString(),
                 }}
               />
             </FadeInCard>
